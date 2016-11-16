@@ -5,7 +5,7 @@ from formatting import statstrim, skinstrim, itemstrim
 from getargs   import getargs
 from getdigits import getdigits
 from findvalues import findchamp, finditem
-from itemdict import itemstovalues, colloq
+from itemdict import itemstovalues, valuestoitems, colloq
 
 client = discord.Client()
 
@@ -125,22 +125,44 @@ async def on_message(message):
                 item += argv[i].lower() + ' '
             i += 1
 
-        try:
+        import re
+
+        possible = [s for s in itemstovalues if re.search('{}'.format(item), s) is not None]
+        inv_map  = {v: k for k, v in colloq.items()}
+        c = 0
+        colloqz  = [c for c in inv_map       if re.search('{}'.format(item), c) is not None]
+
+        i = 0
+        colloqval = []
+        while i != len(colloqz):
+            colloqval.append(inv_map[colloqz[i]])
+            i += 1
+
+        i = 0
+        while i != len(colloqval):
+            possible.append(valuestoitems[colloqval[i]])
+            i += 1
+
+        if len(possible) == 1:
+            item = possible[0]
             value = itemstovalues[item]
-        except KeyError:
-            try:
-                value = list(colloq.keys())[list(colloq.values()).index(';' + item)]
-            except ValueError:
-                await client.send_message(message.channel, '**ERROR: Item does not exist!**\n' +
-                                                           'Please input the full name of the item, or an abbreviation (roa)\n' +
-                                                           'If the abbreviation does not work, use the full name instead.')
-                return -1
+            output = finditem(value, '6.22.1')
+            new_out = itemstrim(output)
+            await client.send_message(message.channel, '{}'.format(new_out))
+        elif len(possible) == 0:
+            await client.send_message(message.channel, '**ERROR: Item not found!**\nPlease input an actual item.')
+        else:
+            print (len(possible))
+            string = ''
+            c = 0
+            for i in possible:
+                if c < (len(possible)-1):
+                    string += i + ', '
+                else:
+                    string += i +'.'
+                c += 1
+            await client.send_message(message.channel, 'Value not found!\nPossible values: {}'.format(string))
 
-        output = finditem(value, '6.22.1')
-
-        new_out = itemstrim(output)
-
-        await client.send_message(message.channel, '{}'.format(new_out))
 
     if message.content.startswith('!champ'):
         argc, argv = getargs(message.content)

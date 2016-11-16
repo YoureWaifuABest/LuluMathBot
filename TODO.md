@@ -9,11 +9,11 @@ These are the general things I plan to add.
 - [ ] Rewrite arg system
 - [ ] Make arguments order-independent (in some cases
 - [ ] Improve !item search
-	- [ ] Improve parsing of colloq
-	- [ ] Return possible values with an incomplete string
-		- [ ] Ex: `!item hextech` returns the names: hextech gunblade, glp, protobelt, etc.
-		- [ ] If there is only one possible value, return that value.
-- [ ] Rewrite formstting.py
+	- [x] Improve parsing of colloq
+	- [x] Return possible values with an incomplete string
+		- [x] Ex: `!item hextech` returns the names: hextech gunblade, glp, protobelt, etc.
+		- [x] If there is only one possible value, return that value.
+- [ ] Rewrite formatting.py
 
 ## Mid Priority
 - [ ] General clean-up
