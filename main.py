@@ -65,9 +65,6 @@ async def on_message(message):
 
         await client.send_message(message.channel, '{}'.format(rand))
 
-    if "pink shithawk" in message.content.lower():
-        await client.send_message(message.channel, 'All hail our lord and savior')
-
     if message.content.lower().startswith('!8ball'):
         argc, argv = getargs(message.content)
         
@@ -148,6 +145,11 @@ async def on_message(message):
     if message.content.startswith('!champ'):
         argc, argv = getargs(message.content)
 
+        i = 0
+        while i != len(argv):
+            argv[i] = argv[i].lower()
+            i += 1
+
         try:
             argv[1]
         except:
@@ -155,7 +157,7 @@ async def on_message(message):
                                                        '`Usage: !champ help`')
             return -1
 
-        if argv[1].lower() == 'help':
+        if argv[1] == 'help':
             await client.send_message(message.channel, 'Prints data on a certain champion.\n' +
                                                        '`Usage: !champ data champion options`\n' +
                                                        'Champion name needs to be capitalized, data needs to be lowercase, options need to be lowercase\n' +

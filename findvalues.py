@@ -12,6 +12,8 @@ def find_values(id, json_repr):
     return results
 
 def findchamp(champion, find, patch):
+    champion = champion.capitalize()
+
     json_repr = open('/home/slgd/programming/discordpy/ddragon/' + patch + '/data/en_US/champion/' + champion + '.json').read()
 
     return find_values(find, json_repr)
