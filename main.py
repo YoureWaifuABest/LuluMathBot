@@ -20,9 +20,6 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-    #storebool = 0
-    #global store
-
     #### Fun Stuff ####
     if message.content.lower().startswith('that tasted'):
         await client.send_message(message.channel, 'purple!')
@@ -37,46 +34,24 @@ async def on_message(message):
     if message.content.lower().startswith('!random'):
         argc, argv = getargs(message.content)
 
+        if argv[1] == 'help':
+            await client.send_message(message.channel, '**Find a random whole number between two values**\n' +
+                                                       '`Usage: !random number number`')
+            return 0
+
         try:
             float(argv[1])
         except:
+            await client.send_message(message.channel, '**ERROR: Argument not a number!**\n' +
+                                                       '`See: !random help')
             return -1
 
         try: 
             float(argv[2])
         except:
+            await client.send_message(message.channel, '**ERROR: Argument not a number!**\n' +
+                                                       '`See: !random help')
             return -1
-
-        # Example of !store feature. Needs rework so commented out.
-        #if argv[1] == 'store':
-        #    try:
-        #        float(argv[2])
-        #    except:
-        #        return -1
-        #    rand = randint(int(store), int(argv[2]))
-        #    rand = str(rand)
-        #elif argv[2] == 'store':
-        #    try:
-        #        float(argv[1])
-        #    except:
-        #        return -1
-        #    rand = randint(int(argv[1]), int(store))
-        #    rand = str(rand)
-        #else:
-        #    try:
-        #        float(argv[1])
-        #    except:
-        #        return -1
-        #    try: 
-        #        float(argv[2])
-        #    except:
-        #        return -1
-
-        #    rand = randint(int(argv[1]), int(argv[2]))
-        #    rand = str(rand)
-
-        #if storebool == 1:
-        #    store = rand
 
         rand = randint(int(argv[1]), int(argv[2]))
         rand = str(rand)
@@ -94,10 +69,6 @@ async def on_message(message):
             else:
                 item += argv[i].lower() + ' '
             i += 1
-
-        if item == 'what is the best color?':
-            await client.send_message(message.channel, 'Purple!')
-            return -1
 
         rand = randint(1,5)
         if rand == 1:
@@ -138,21 +109,6 @@ async def on_message(message):
             await client.purge_from(message.channel, limit=500)
         else:
             await client.send_message(message.channel, 'You do not have permission to use this command!')
-
-    # Plan for this is to be able to do !store and store a variable which can be used by other functions
-    # But the way I'm doing this currently is terrible, so I'm going to rework it.
-    #if message.content.lower().startswith('!store'):
-    #    argc, argv = getargs(message.content)
-
-    #    message.content = message.content.replace('!store ', '')
-
-    #    store = argv[1]
-
-    #    storebool = 1
-
-    #    print(message.content)
-
-    #    print(store)
 
     #### Math ####
     if message.content.startswith('!damage'):
@@ -291,7 +247,7 @@ async def on_message(message):
 
     #### Data ####
     if message.content.startswith('!item'):
-        argc, argv = getargs(message.content)
+        argc, argv = getargs(message.content.lower())
 
         try:
             argv[1]
@@ -300,7 +256,7 @@ async def on_message(message):
                                                        '`See !item help`')
             return -1
 
-        if argv[1].lower() == 'help':
+        if argv[1] == 'help':
             await client.send_message(message.channel, 'Prints information on a given item.\n' + 
                                                        'Usage: !item item')
             return 0
@@ -309,9 +265,9 @@ async def on_message(message):
         item = ''
         while i < argc+1:
             if i == argc:
-                item += argv[i].lower()
+                item += argv[i]
             else:
-                item += argv[i].lower() + ' '
+                item += argv[i] + ' '
             i += 1
 
         possible = [s for s in itemstovalues if re.search('{}'.format(item), s) is not None]
@@ -352,12 +308,7 @@ async def on_message(message):
 
 
     if message.content.startswith('!champ'):
-        argc, argv = getargs(message.content)
-
-        i = 0
-        while i != len(argv):
-            argv[i] = argv[i].lower()
-            i += 1
+        argc, argv = getargs(message.content.lower())
 
         try:
             argv[1]
