@@ -15,7 +15,7 @@ Discord bot to do basic League of Legends related math and output League of Lege
 8 & 5 will be seperated into seperate bots eventually. Or maybe not.
 
 ## Dependencies
-1. Python3
+1. Python3.5+
 2. discord.py
 
 ## Installation
