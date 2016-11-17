@@ -21,5 +21,5 @@ Discord bot to do basic League of Legends related math and output League of Lege
 ## Installation
 1. `git clone [this repo]`
 2. Download Riot's datadragon and untar it into the location of the repo.
-3. Add your bot's token at the end of main.py
+3. Add your bot's token to bottoken.py
 4. Launch it and it'll probably work.
