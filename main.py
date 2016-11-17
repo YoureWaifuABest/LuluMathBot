@@ -9,6 +9,7 @@ from findvalues import findchamp, finditem
 from itemdict import itemstovalues, valuestoitems, colloq
 
 client = discord.Client()
+#store = ''
 
 @client.event
 async def on_ready():
@@ -19,24 +20,10 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-    if message.content.startswith('!test'):
-        counter = 0
-        tmp = await client.send_message(message.channel, 'Calculating messages...')
-        async for log in client.logs_from(message.channel, limit=100):
-            if log.author == message.author:
-                counter += 1
+    #storebool = 0
+    #global store
 
-        await client.edit_message(tmp, 'You have {} messages.'.format(counter))
-
-    if message.content.startswith('!help'):
-        await client.send_message(message.channel, '`Commands: !help, !reduction, !lethality, !damage, !champ, !item, !source, !license`\n' + 
-                                                   'Add help as an argument to any command to get help with it.')
-    if message.content.startswith('!clear'):
-        if message.channel.permissions_for(message.author).manage_messages:
-            await client.purge_from(message.channel, limit=500)
-        else:
-            await client.send_message(message.channel, 'You do not have permission to use this command!')
-
+    #### Fun Stuff ####
     if message.content.lower().startswith('that tasted'):
         await client.send_message(message.channel, 'purple!')
 
@@ -60,8 +47,38 @@ async def on_message(message):
         except:
             return -1
 
-        rand = randint(int(argv[1]), int(argv[2]))
+        # Example of !store feature. Needs rework so commented out.
+        #if argv[1] == 'store':
+        #    try:
+        #        float(argv[2])
+        #    except:
+        #        return -1
+        #    rand = randint(int(store), int(argv[2]))
+        #    rand = str(rand)
+        #elif argv[2] == 'store':
+        #    try:
+        #        float(argv[1])
+        #    except:
+        #        return -1
+        #    rand = randint(int(argv[1]), int(store))
+        #    rand = str(rand)
+        #else:
+        #    try:
+        #        float(argv[1])
+        #    except:
+        #        return -1
+        #    try: 
+        #        float(argv[2])
+        #    except:
+        #        return -1
 
+        #    rand = randint(int(argv[1]), int(argv[2]))
+        #    rand = str(rand)
+
+        #if storebool == 1:
+        #    store = rand
+
+        rand = randint(int(argv[1]), int(argv[2]))
         rand = str(rand)
 
         await client.send_message(message.channel, '{}'.format(rand))
@@ -96,12 +113,183 @@ async def on_message(message):
         else:
             await client.send_message(message.channel, 'Definitely not.')
 
+    #### Administrative Stuff ####
+    if message.content.startswith('!test'):
+        counter = 0
+        tmp = await client.send_message(message.channel, 'Calculating messages...')
+        async for log in client.logs_from(message.channel, limit=100):
+            if log.author == message.author:
+                counter += 1
+
+        await client.edit_message(tmp, 'You have {} messages.'.format(counter))
+
+    if message.content.startswith('!help'):
+        await client.send_message(message.channel, '`Commands: !help, !reduction, !lethality, !damage, !champ, !item, !source, !license`\n' + 
+                                                   'Add help as an argument to any command to get help with it.')
+
     if message.content.startswith('!source'):
         await client.send_message(message.channel, 'Github: https://github.com/YoureWaifuABest/LuluMathBot')
 
     if message.content.startswith('!license'):
         await client.send_message(message.channel, '{}'.format(open('LICENSE', 'r').read()))
 
+    if message.content.startswith('!clear'):
+        if message.channel.permissions_for(message.author).manage_messages:
+            await client.purge_from(message.channel, limit=500)
+        else:
+            await client.send_message(message.channel, 'You do not have permission to use this command!')
+
+    # Plan for this is to be able to do !store and store a variable which can be used by other functions
+    # But the way I'm doing this currently is terrible, so I'm going to rework it.
+    #if message.content.lower().startswith('!store'):
+    #    argc, argv = getargs(message.content)
+
+    #    message.content = message.content.replace('!store ', '')
+
+    #    store = argv[1]
+
+    #    storebool = 1
+
+    #    print(message.content)
+
+    #    print(store)
+
+    #### Math ####
+    if message.content.startswith('!damage'):
+        argc, argv = getargs(message.content)
+
+        if argv[1] == 'help':
+            await client.send_message(message.channel, 'Prints the damage dealt after reductions\n' +
+                                                       'Usage: !damage base resist')
+            return 0
+
+        if argc < 2:
+            await client.send_message(message.channel, '**ERROR: Too few arguments.**\n' +
+                                                       'See !damage help')
+            return -1
+        
+        if argc > 2:
+            await client.send_message(message.channel, '**ERROR: Too many arguments.**\n' +
+                                                       'See !damage help')
+            return -1
+
+        try:
+            float(argv[1])
+        except ValueError:
+            await client.send_message(message.channel, '**ERROR: Entered value is not a number!**\n Syntax: !damage base resist')
+            return -1
+
+        try:
+            float(argv[2])
+        except ValueError:
+            await client.send_message(message.channel, '**ERROR: Entered value is not a number!**\n Syntax: !damage base resist')
+            return -1
+
+        damage = float(argv[1]) * float(argv[2])
+        await client.send_message(message.channel, 'Damage: __{}__'.format(damage))
+
+    if message.content.startswith('!reduction'):
+        # Remove command from processing of message (just get arguments)
+        argc, argv = getargs(message.content)
+
+        if argc < 1:
+            await client.send_message(message.channel, '**ERROR: Too few arguments.**\n' +
+                                                       'See !reduction help')
+            return -1
+        elif argc > 1:
+            await client.send_message(message.channel, '**ERROR: Too many arguments.**\n' +
+                                                       'See !reduction help')
+            return -1
+
+        # Print help message
+        if argv[1] == 'help':
+            await client.send_message(message.channel, 'Prints the value damage is multiplied by with a given amount of armor / mr\n' +
+                                                       'Usage: !reduction number')
+            return 0
+
+        # Ensure value entered is at least a floating point number
+        try: 
+            float(argv[1])
+        except ValueError:
+            await client.send_message(message.channel, '**ERROR: Entered value is not a number!**\n Syntax: !reduction number')
+            return -1
+
+        if float(argv[1]) < 0:
+            reduction = 2 - (100/(100-float(argv[1])))
+        elif float(argv[1]) >= 0:
+            reduction = 100/(100+float(argv[1]))
+
+        await client.send_message(message.channel, 'Reduction Multiplier: __{}__'.format(reduction))
+
+    if message.content.startswith('!lethality'):
+        # Remove command from processing of message (just get arguments)
+        # args = message.content[len('!lethality'):].strip()
+        argc, argv = getargs(message.content)
+
+        if argv[1] == "help":
+            await client.send_message(message.channel, 'Calculates actual armor pen a target receives\n' +
+                                                       '```syntax: !lethality number level\n' +
+                                                       'or      !lethality table number```' +
+                                                       'Adding table prints a table of values from level 1 to 18')
+            return 0
+        elif argv[1] == "table":
+            # Ensure value entered is at least a floating point number
+            if argc < 2:
+                await client.send_message(message.channel, '**ERROR: Too few arguments!**\n Syntax: !lethality table number')
+                return -1
+            elif argc > 2:
+                await client.send_message(message.channel, '**ERROR: Too many arguments!**\n' + 'Syntax: !lethality table number')
+                return -1
+            if argv[2] == "help":
+                await client.send_message(message.channel, 'Prints a table of actual armor pen a target receives, from levels ' +
+                                                           '1 to 18\n' +
+                                                           'Usage: !lethality table number') 
+                return 0
+            try: 
+                float(argv[2])
+            except ValueError:
+                await client.send_message(message.channel, '**ERROR: Entered value is not a number!**\n Syntax: !lethality table number')
+                return -1
+            
+            stri  = '```\n'
+            stri += 'Level  Actual Penetration\n'
+            i = 1
+            while i <= 18:
+                lethality = 0.4 * float(argv[2]) + ((0.6 * float(argv[2]) * i)/18)
+                blanks = 5 + 1/getdigits(i)
+                stri += str(i)
+                stri += ' ' * int(blanks)
+                stri += str(lethality)
+                stri += '\n'
+                i += 1
+            stri += '```'
+            await client.send_message(message.channel, stri)
+
+            return 0
+
+        try:
+            argv[2]
+        except:
+            await client.send_message(message.channel, '**ERROR: Too few arguments!**\n Syntax: !lethality number level')
+            return -1 
+
+        # Ensure value entered is at least a floating point number
+        try: 
+            float(argv[1])
+        except ValueError:
+            await client.send_message(message.channel, '**ERROR: Entered value is not a number!**\nSyntax: !lethality number level')
+            return -1
+
+        try: 
+           float(argv[2])
+        except ValueError:
+            await client.send_message(message.channel, '**ERROR: Entered value is not a number!**\nSyntax: !lethality number level')
+            return -1
+
+        lethality = 0.4 * float(argv[1]) + ((0.6 * float(argv[1]) * float(argv[2]))/18)
+        await client.send_message(message.channel, 'Effective Armor Pen: __{}__'.format(lethality))
+
+    #### Data ####
     if message.content.startswith('!item'):
         argc, argv = getargs(message.content)
 
@@ -282,146 +470,7 @@ async def on_message(message):
             else:
                 await client.send_message(message.channel, 'Too many arguments!')
                 return -1 
-        elif argv[1] == 'passive':
-            await client.send_message(message.channel, '{}'.format(output[0]))
-
-            #new_out = output
-            #await client.send_message(message.channel, '**{}: **\n {}'.format(argv[2], new_out[0][1].items()))
     
-    if message.content.startswith('!damage'):
-        argc, argv = getargs(message.content)
-
-        if argv[1] == 'help':
-            await client.send_message(message.channel, 'Prints the damage dealt after reductions\n' +
-                                                       'Usage: !damage base resist')
-            return 0
-
-        if argc < 2:
-            await client.send_message(message.channel, '**ERROR: Too few arguments.**\n' +
-                                                       'See !damage help')
-            return -1
-        
-        if argc > 2:
-            await client.send_message(message.channel, '**ERROR: Too many arguments.**\n' +
-                                                       'See !damage help')
-            return -1
-
-        try:
-            float(argv[1])
-        except ValueError:
-            await client.send_message(message.channel, '**ERROR: Entered value is not a number!**\n Syntax: !damage base resist')
-            return -1
-
-        try:
-            float(argv[2])
-        except ValueError:
-            await client.send_message(message.channel, '**ERROR: Entered value is not a number!**\n Syntax: !damage base resist')
-            return -1
-
-        damage = float(argv[1]) * float(argv[2])
-        await client.send_message(message.channel, 'Damage: __{}__'.format(damage))
-
-    if message.content.startswith('!reduction'):
-        # Remove command from processing of message (just get arguments)
-        argc, argv = getargs(message.content)
-
-        if argc < 1:
-            await client.send_message(message.channel, '**ERROR: Too few arguments.**\n' +
-                                                       'See !reduction help')
-            return -1
-        elif argc > 1:
-            await client.send_message(message.channel, '**ERROR: Too many arguments.**\n' +
-                                                       'See !reduction help')
-            return -1
-
-        # Print help message
-        if argv[1] == 'help':
-            await client.send_message(message.channel, 'Prints the value damage is multiplied by with a given amount of armor / mr\n' +
-                                                       'Usage: !reduction number')
-            return 0
-
-        # Ensure value entered is at least a floating point number
-        try: 
-            float(argv[1])
-        except ValueError:
-            await client.send_message(message.channel, '**ERROR: Entered value is not a number!**\n Syntax: !reduction number')
-            return -1
-
-        if float(argv[1]) < 0:
-            reduction = 2 - (100/(100-float(argv[1])))
-        elif float(argv[1]) >= 0:
-            reduction = 100/(100+float(argv[1]))
-
-        await client.send_message(message.channel, 'Reduction Multiplier: __{}__'.format(reduction))
-
-    if message.content.startswith('!lethality'):
-        # Remove command from processing of message (just get arguments)
-        # args = message.content[len('!lethality'):].strip()
-        argc, argv = getargs(message.content)
-
-        if argv[1] == "help":
-            await client.send_message(message.channel, 'Calculates actual armor pen a target receives\n' +
-                                                       '```syntax: !lethality number level\n' +
-                                                       'or      !lethality table number```' +
-                                                       'Adding table prints a table of values from level 1 to 18')
-            return 0
-        elif argv[1] == "table":
-            # Ensure value entered is at least a floating point number
-            if argc < 2:
-                await client.send_message(message.channel, '**ERROR: Too few arguments!**\n Syntax: !lethality table number')
-                return -1
-            elif argc > 2:
-                await client.send_message(message.channel, '**ERROR: Too many arguments!**\n' + 'Syntax: !lethality table number')
-                return -1
-            if argv[2] == "help":
-                await client.send_message(message.channel, 'Prints a table of actual armor pen a target receives, from levels ' +
-                                                           '1 to 18\n' +
-                                                           'Usage: !lethality table number') 
-                return 0
-            try: 
-                float(argv[2])
-            except ValueError:
-                await client.send_message(message.channel, '**ERROR: Entered value is not a number!**\n Syntax: !lethality table number')
-                return -1
-            
-            stri  = '```\n'
-            stri += 'Level  Actual Penetration\n'
-            i = 1
-            while i <= 18:
-                lethality = 0.4 * float(argv[2]) + ((0.6 * float(argv[2]) * i)/18)
-                blanks = 5 + 1/getdigits(i)
-                stri += str(i)
-                stri += ' ' * int(blanks)
-                stri += str(lethality)
-                stri += '\n'
-                i += 1
-            stri += '```'
-            await client.send_message(message.channel, stri)
-
-            return 0
-
-        try:
-            argv[2]
-        except:
-            await client.send_message(message.channel, '**ERROR: Too few arguments!**\n Syntax: !lethality number level')
-            return -1 
-
-        # Ensure value entered is at least a floating point number
-        try: 
-            float(argv[1])
-        except ValueError:
-            await client.send_message(message.channel, '**ERROR: Entered value is not a number!**\nSyntax: !lethality number level')
-            return -1
-
-        try: 
-           float(argv[2])
-        except ValueError:
-            await client.send_message(message.channel, '**ERROR: Entered value is not a number!**\nSyntax: !lethality number level')
-            return -1
-
-        lethality = 0.4 * float(argv[1]) + ((0.6 * float(argv[1]) * float(argv[2]))/18)
-        await client.send_message(message.channel, 'Effective Armor Pen: __{}__'.format(lethality))
-
 from bottoken import token
 
 client.run(token)
