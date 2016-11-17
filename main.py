@@ -1,5 +1,6 @@
 import discord
 import asyncio
+import re
 from random import randint
 from formatting import statstrim, skinstrim, itemstrim
 from getargs   import getargs
@@ -124,8 +125,6 @@ async def on_message(message):
             else:
                 item += argv[i].lower() + ' '
             i += 1
-
-        import re
 
         possible = [s for s in itemstovalues if re.search('{}'.format(item), s) is not None]
         inv_map  = {v: k for k, v in colloq.items()}
