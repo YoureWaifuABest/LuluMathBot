@@ -4,7 +4,7 @@ These are the general things I plan to add.
 ## High Priority
 - [ ] General clean-up
 - [ ] Rewrite arg system
-- [ ] Make arguments order-independent (in some cases)
+- [x] Make arguments order-independent (in some cases)
 - [ ] Rewrite formatting.py
 - [x] Improve !item search
 	- [x] Improve parsing of colloq

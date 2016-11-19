@@ -295,7 +295,6 @@ async def on_message(message):
         elif len(possible) == 0:
             await client.send_message(message.channel, '**ERROR: Item not found!**\nPlease input an actual item.')
         else:
-            print (len(possible))
             string = ''
             c = 0
             for i in possible:
@@ -320,15 +319,18 @@ async def on_message(message):
         if argv[1] == 'help':
             await client.send_message(message.channel, 'Prints data on a certain champion.\n' +
                                                        '`Usage: !champ data champion options`\n' +
-                                                       'Champion name needs to be capitalized, data needs to be lowercase, options need to be lowercase\n' +
                                                        'Options vary. `!champ data champion help` to list options.\n' +
                                                        '**Possible values for data:**\n' +
                                                        '`lore, blurb, stats, skins, tags`') #spells passive
             return 0
         
-        output = findchamp(argv[2], argv[1], '6.22.1')
+        if argv[2] != 'help':
+            output = findchamp(argv[2], argv[1], '6.22.1')
 
         if argv[1] == 'lore' or argv[1] == 'blurb':
+            if argv[2] == 'help':
+                await client.send_message(message.channel, 'No possible options!\n')
+                return 0
             try:
                 argv[3]
             except IndexError:
@@ -344,16 +346,23 @@ async def on_message(message):
                 await client.send_message(message.channel, 'Too many arguments!')
                 return -1
         elif argv[1] == 'stats':
+            if argv[2] == 'help':
+                await client.send_message(message.channel, '`Usage: !champ stats champion options`\n' +
+                                                           'Where options are: help (prints this help message), ' +
+                                                           'all (prints keys + values), keys (prints just keys), or a certain key. Defaults to all.')
+                return 0
+
             try:
                 argv[3]
             except IndexError:
                 argv.append('all')
-            if argv[3] == 'all':
-                new_out = statstrim(output)
-            elif argv[3] == 'help':
+            if argv[3] == 'help':
                 await client.send_message(message.channel, '`Usage: !champ stats champion options`\n' +
                                                            'Where options are: help (prints this help message), ' +
                                                            'all (prints keys + values), keys (prints just keys), or a certain key. Defaults to all.')
+                return 0
+            elif argv[3] == 'all':
+                new_out = statstrim(output)
                 return 0
             elif argv[3] == 'keys':
                 new_out = output[0].keys()
@@ -366,20 +375,25 @@ async def on_message(message):
                     return -1
             await client.send_message(message.channel, '**{}: **\n```{}```'.format(argv[1], new_out))
         elif argv[1] == 'spells':
+            if argv[2] == 'help':
+                await client.send_message(message.channel, '`Usage: !champ spells champion options`\n' +
+                                                           'Where options are: help (prints this help message,) ' +
+                                                           'all (prints info on all the spells), q,w,e,r (prints respective ability). Defaults to all.')
+                return 0
             try:
                 argv[3]
             except IndexError:
                 argv.append('all')
+            if argv[3] == 'help':
+                await client.send_message(message.channel, '`Usage: !champ spells champion options`\n' +
+                                                           'Where options are: help (prints this help message,) ' +
+                                                           'all (prints info on all the spells), q,w,e,r (prints respective ability). Defaults to all.')
+                return 0
             if argv[3] == 'all':
                 a = 0
                 for i in output[0]:
                     await client.send_message(message.channel, '{}'.format(output[0][a].items()))
                     a += 1
-            elif argv[3] == 'help':
-                await client.send_message(message.channel, '`Usage: !champ spells champion options`\n' +
-                                                           'Where options are: help (prints this help message,) ' +
-                                                           'all (prints info on all the spells), q,w,e,r (prints respective ability). Defaults to all.')
-                return 0
             elif argv[3] == 'q':
                 new_out = str(output[0][0].items())
                 await client.send_message(message.channel, '{}'.format(new_out))
@@ -394,6 +408,9 @@ async def on_message(message):
                                                            'See `!champ spells champion help` for help')
                 return -1
         elif argv[1] == 'skins':
+            if argv[2] == 'help':
+                await client.send_message(message.channel, 'No possible options!\n')
+                return 0
             try:
                 argv[3]
             except IndexError:
@@ -407,6 +424,9 @@ async def on_message(message):
                 await client.send_message(message.channel, 'Too many arguments!')
                 return -1 
         elif argv[1] == 'tags':
+            if argv[2] == 'help':
+                await client.send_message(message.channel, 'No possible options!\n')
+                return 0
             try:
                 argv[3]
             except IndexError:
