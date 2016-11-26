@@ -363,7 +363,6 @@ async def on_message(message):
                 return 0
             elif argv[3] == 'all':
                 new_out = statstrim(output)
-                return 0
             elif argv[3] == 'keys':
                 new_out = output[0].keys()
             else:
