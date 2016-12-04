@@ -1,3 +1,5 @@
+import discord
+import asyncio
 from itemdict import valuestoitems
 import re
 
@@ -21,17 +23,27 @@ def statstrim(trim):
     adBase   = str(trim[0]['attackdamage'])
     adPerLvl = str(trim[0]['attackdamageperlevel'])
 
-    return 'Armor: ' + armor + ' Per Level: ' + armorLvl + '\n' + \
-           'Magic Resist: ' + mrBase + ' Per Level: ' +mrPerLvl + '\n' + \
-           'Health: ' + health + ' Per Level: ' + healthLv + '\n' + \
-           'HP Regen: ' + hpregen + ' Per Level: ' +hpregLvl + '\n' + \
-           'Mana: ' + mana + ' Per Level: ' + mpPerLvl + '\n' + \
-           'MP Regen: ' + mpRegen + ' Per Level: ' + mpRegLvl + '\n' + \
-           'Movement Speed: ' + moveSpd + '\n' + \
-           'Attack Speed Offset: ' + asOffset + ' Per Level: ' + asPerLvl + \
-           '\n' + \
-           'Range: ' + atkRange + '\n' + \
-           'Base AD: ' + adBase + ' Per level: ' + adPerLvl
+    embed = discord.Embed(color=0xCC00CC)
+    embed.add_field(name="Armor", value=armor, inline=True)
+    embed.add_field(name="Armor Per Level", value=armorLvl, inline=True)
+    embed.add_field(name="Magic Resist", value=mrBase, inline=True)
+    embed.add_field(name="Magic Resist Per Level", value=mrPerLvl, inline=True)
+    embed.add_field(name="Health", value=health, inline=True)
+    embed.add_field(name="Health Per Level", value=healthLv, inline=True)
+    embed.add_field(name="Health Regen", value=hpregLvl, inline=True)
+    embed.add_field(name="Health Regen Per Level", value=hpregLvl, inline=True)
+    embed.add_field(name="Mana", value=mana, inline=True)
+    embed.add_field(name="Mana Per Level", value=mpPerLvl, inline=True)
+    embed.add_field(name="Mana Regen", value=mpRegen, inline=True)
+    embed.add_field(name="Mana Regen Per Level", value=mpRegLvl, inline=True)
+    embed.add_field(name="Movement Speed", value=moveSpd, inline=True)
+    embed.add_field(name="Attack Speed Offset", value=asOffset, inline=True)
+    embed.add_field(name="Attack Range", value=atkRange, inline=True)
+    embed.add_field(name="Attack Damage", value=adBase, inline=True)
+    embed.add_field(name="Attack Damage Per Level", value=adPerLvl, inline=True)
+    embed.set_author(name='Stats', icon_url="http://ddragon.leagueoflegends.com/cdn/6.23.1/img/champion/Lulu.png")
+
+    return embed
 
 def skinstrim(trim):
     skin = []
@@ -67,16 +79,15 @@ def itemstrim(trim):
     item['desc'] = item['desc'].replace('<br>', '\n')
     item['desc'] = re.sub("(<.*?>)", '', item['desc'])
 
+    embed = discord.Embed(color=0xCC00CC, title=item['name']) 
     if buildsinto:
-        itemstr = '**' + item['name'] + '**\n```' + \
-                  'Costs: ' + item['cost'] + '\n\n' + \
-                  'Sells for: ' + item['sell'] + '\n\n' + \
-                  'Builds into: ' + buildsinto + '\n\n' + \
-                  'Description:\n' + item['desc'] + '```'
+        embed.add_field(name="Costs", value=item['cost'])
+        embed.add_field(name="Sells for", value=item['sell'])
+        embed.add_field(name="Builds into", value=buildsinto)
+        embed.add_field(name="Description", value=item['desc'])
     else:
-        itemstr = '**' + item['name'] + '**\n```' + \
-                  'Costs: ' + item['cost'] + '\n' + \
-                  'Sells for: ' + item['sell'] + '\n' + \
-                  'Description:\n' + item['desc'] + '```'
+        embed.add_field(name="Costs", value=item['cost'])
+        embed.add_field(name="Sells for", value=item['sell'])
+        embed.add_field(name="Description", value=item['desc'])
 
-    return itemstr
+    return embed
