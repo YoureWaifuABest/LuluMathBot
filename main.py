@@ -505,7 +505,6 @@ async def on_message(message):
                 embed = discord.Embed(color=0xFF0022, title="ERROR", description="Too many arguments")
                 embed.add_field(name="Usage", value="`!champ tags champion`")
                 await client.send_message(message.channel, embed=embed)
-
     
 from bottoken import token
 

@@ -83,11 +83,11 @@ def itemstrim(trim):
     if buildsinto:
         embed.add_field(name="Costs", value=item['cost'])
         embed.add_field(name="Sells for", value=item['sell'])
-        embed.add_field(name="Builds into", value=buildsinto)
-        embed.add_field(name="Description", value=item['desc'])
+        embed.add_field(name="Builds into", value=buildsinto, inline=False)
+        embed.add_field(name="Description", value=item['desc'], inline=False)
     else:
         embed.add_field(name="Costs", value=item['cost'])
         embed.add_field(name="Sells for", value=item['sell'])
-        embed.add_field(name="Description", value=item['desc'])
+        embed.add_field(name="Description", value=item['desc'], inline=False)
 
     return embed
