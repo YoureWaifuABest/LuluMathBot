@@ -3,7 +3,7 @@ import asyncio
 from itemdict import valuestoitems
 import re
 
-def statstrim(trim):
+def statstrim(trim, champ):
     armor    = str(trim[0]['armor'])
     armorLvl = str(trim[0]['armorperlevel'])
     mrBase   = str(trim[0]['spellblock'])
@@ -41,7 +41,7 @@ def statstrim(trim):
     embed.add_field(name="Attack Range", value=atkRange, inline=True)
     embed.add_field(name="Attack Damage", value=adBase, inline=True)
     embed.add_field(name="Attack Damage Per Level", value=adPerLvl, inline=True)
-    embed.set_author(name='Stats', icon_url="http://ddragon.leagueoflegends.com/cdn/6.23.1/img/champion/Lulu.png")
+    embed.set_author(name='Stats', icon_url="http://ddragon.leagueoflegends.com/cdn/6.23.1/img/champion/" + champ.capitalize() + ".png")
 
     return embed
 

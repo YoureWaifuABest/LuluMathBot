@@ -418,7 +418,7 @@ async def on_message(message):
                 await client.send_message(message.channel, embed=embed)
                 return 0
             elif argv[3] == 'all':
-                new_out = statstrim(output)
+                new_out = statstrim(output, argv[2])
             elif argv[3] == 'keys':
                 # Format this later, since it's super ugly
                 new_out = discord.Embed(color=0xCC00CC, title="Keys", description=str(output[0].keys()))
