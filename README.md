@@ -12,7 +12,7 @@ Discord bot to do basic League of Legends related math and output League of Lege
 6. Will respond to certain phrases (for fun)
 7. Some other fun phrases (8ball, rng)
 
-8 & 5 will be seperated into seperate bots eventually. Or maybe not.
+7 & 5 will be seperated into seperate bots eventually. Or maybe not.
 
 ## Dependencies
 1. Python3.5+
