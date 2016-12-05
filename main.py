@@ -103,8 +103,8 @@ async def on_message(message):
 
     if message.content.startswith('!help'):
         embed = discord.Embed(color=0xCC00CC)
-        embed.add_field(name="Commands", value="!help, !reduction, !lethality, !damage, !champ, !item, !source, !license, !winrate, !challenger", inline=True)
-        embed.set_footer(text="Add help as an argument to any command to get help with it.")
+        embed.add_field(name="Commands", value="!help, !reduction, !lethality, !damage, !champ, !item, !source, !license, !winrate, !challenger\n" +
+                                               "Add help as an argument to any command to get help with it", inline=True)
         await client.send_message(message.channel, embed=embed)
 
     if message.content.startswith('!source'):
