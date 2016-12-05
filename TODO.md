@@ -5,6 +5,10 @@ These are the general things I plan to add.
 - [ ] General clean-up
 - [ ] Rewrite arg system
 - [x] Make arguments order-independent (in some cases)
+- [ ] Add stats a certain level to !champ stats
+- [ ] Add more Riot API Features
+  - [ ] Replace current ddragon input with static API
+	- [ ] Specific profile lookup other than just winrate
 - [ ] Rewrite formatting.py
 - [x] Improve !item search
 	- [x] Improve parsing of colloq
