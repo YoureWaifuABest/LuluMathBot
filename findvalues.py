@@ -23,7 +23,6 @@ def findchamp(champion, find, patch):
     json_repr = open('ddragon/' + patch + '/data/en_US/champion/' + champion + '.json').read()
 
     f = find_values(find, json_repr)
-    json_repr.close()
 
     return  f
            
@@ -31,7 +30,6 @@ def finditem(item, patch):
     json_repr = open('ddragon/' + patch +'/data/en_US/item.json').read()
 
     output = find_values('data', json_repr)
-    json_repr.close()
 
     new = output[0][item]
 
@@ -41,7 +39,6 @@ def finditemval(item, patch):
     json_repr = open('ddragon/' + patch +'/data/en_US/item.json').read()
 
     output = find_values('data', json_repr)
-    json_repr.close()
 
     keys = output[0]
 
