@@ -6,13 +6,15 @@ Discord bot to do basic League of Legends related math and output League of Lege
 2. Basic damage calculator (damage * resist essentially)
 3. Outputs Champion specific data (stats, lore, etc.)
 4. Item information lookup
-5. Can clear the channel
+5. Print winrate of summoners
+6. Print current challenger players
+7. Can clear the channel
   + This requires appropriate permissions
   - Included because I've been too lazy to make a second bot
-6. Will respond to certain phrases (for fun)
-7. Some other fun phrases (8ball, rng)
+8. Will respond to certain phrases (for fun)
+9. Some other fun phrases (8ball, rng)
 
-7 & 5 will be seperated into seperate bots eventually. Or maybe not.
+5 & 7 will be seperated into seperate bots eventually. Or maybe not.
 
 ## Dependencies
 1. Python3.5+
