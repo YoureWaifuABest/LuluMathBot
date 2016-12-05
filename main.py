@@ -111,7 +111,7 @@ async def on_message(message):
         await client.send_message(message.channel, 'Github: https://github.com/YoureWaifuABest/LuluMathBot')
 
     if message.content.startswith('!license'):
-        embed = discord.Embed(color=0xCC00CC, title="Unlicense", description=open('LICENSE', 'r').read())
+        embed = discord.Embed(color=0xCC00CC, title="License", description=open('LICENSE', 'r').read())
         await client.send_message(message.channel, embed=embed)
         embed = discord.Embed(color=0xCC00CC, title="Attribution", description="LuluMathBot isn't endorsed by Riot Games and" +
                                                                                "doesn't reflect the views or opinions of Riot Games or anyone " +
