@@ -14,12 +14,12 @@ def find_values(id, json_repr):
 def findchamp(champion, find, patch):
     champion = champion.capitalize()
 
-    json_repr = open('/home/slgd/programming/discordpy/ddragon/' + patch + '/data/en_US/champion/' + champion + '.json').read()
+    json_repr = open('ddragon/' + patch + '/data/en_US/champion/' + champion + '.json').read()
 
     return find_values(find, json_repr)
            
 def finditem(item, patch):
-    json_repr = open('/home/slgd/programming/discordpy/ddragon/' + patch +'/data/en_US/item.json').read()
+    json_repr = open('ddragon/' + patch +'/data/en_US/item.json').read()
 
     output = find_values('data', json_repr)
 
@@ -28,7 +28,7 @@ def finditem(item, patch):
     return new
 
 def finditemval(item, patch):
-    json_repr = open('/home/slgd/programming/discordpy/ddragon/' + patch +'/data/en_US/item.json').read()
+    json_repr = open('ddragon/' + patch +'/data/en_US/item.json').read()
 
     output = find_values('data', json_repr)
 
