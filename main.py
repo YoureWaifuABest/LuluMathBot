@@ -110,6 +110,13 @@ async def on_message(message):
     if message.content.startswith('!license'):
         embed = discord.Embed(color=0xCC00CC, title="Unlicense", description=open('LICENSE', 'r').read())
         await client.send_message(message.channel, embed=embed)
+        embed = discord.Embed(color=0xCC00CC, title="Attribution", description="LuluMathBot isn't endorsed by Riot Games and" +
+                                                                               "doesn't reflect the views or opinions of Riot Games or anyone " +
+                                                                               "officially involved in producing or managing League of Legends. " +
+                                                                               "League of Legends and Riot Games are trademarks or registered " +
+                                                                               "trademarks of Riot Games, Inc. League of Legends © Riot Games, " +
+                                                                               "Inc.")
+        await client.send_message(message.channel, embed=embed)
 
     if message.content.startswith('!clear'):
         if message.channel.permissions_for(message.author).manage_messages:
@@ -373,7 +380,13 @@ async def on_message(message):
             return 0
         
         if argv[2] != 'help':
-            output = findchamp(argv[2], argv[1], patch)
+            try:
+                output = findchamp(argv[2], argv[1], patch)
+            except FileNotFoundError:
+                embed = discord.Embed(color=0xFF0022, title="ERROR", description="No such champion!")
+                embed.add_field(name="Usage", value="`!champ help`")
+                await client.send_message(message.channel, embed=embed)
+                return -1
 
         if argv[1] == 'lore' or argv[1] == 'blurb':
             if argv[2] == 'help':
