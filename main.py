@@ -1,5 +1,6 @@
 import discord
 import asyncio
+import logging
 import re
 import datetime
 import os
@@ -13,7 +14,13 @@ from itemdict import itemstovalues, valuestoitems, colloq
 
 client = discord.Client()
 patch = "6.23.1"
-#store = ''
+
+# enable logging
+logger = logging.getLogger('discord')
+logger.setLevel(logging.DEBUG)
+handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
+handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
+logger.addHandler(handler)
 
 @client.event
 async def on_ready():
@@ -524,7 +531,7 @@ async def on_message(message):
 
     if message.content.lower().startswith('!challenger'):
         if 'help' in message.content.lower():
-            embed = discord.Embed(color=0xCC00CC, title='Help', description='Prints the top 99 challenger players')
+            embed = discord.Embed(color=0xCC00CC, title='Help', description='Prints the top 90 challenger players')
             embed.add_field(name="Usage", value="`!challenger`", inline=False)
             await client.send_message(message.channel, embed=embed)
             return 0
@@ -537,7 +544,7 @@ async def on_message(message):
         lp       = ''
         wl       = ''
         for i in members:
-            if w < 100:
+            if w <= 90:
                 position += str(w) + '.\n'
                 name     += i['playerOrTeamName'] + '\n'
                 lp       += str(i['leaguePoints']) + '\n'
@@ -545,11 +552,11 @@ async def on_message(message):
                 break
             w += 1
 
-        embed = discord.Embed(color=0xDAA520, title="Top 99 Challenger")
+        embed = discord.Embed(color=0xDAA520, title="Top 90 Challenger")
         embed.add_field(name="Position", value=position)
         embed.add_field(name="Summoner", value=name)
         embed.add_field(name="LP",       value=lp)
-        embed.set_footer(text="Data retreived on: " + time.strftime("%d-%m-%Y %H:%M:%S", time.localtime(os.path.getmtime('currentchallenger'))))
+        embed.set_footer(text="Data retreived on: " + time.strftime("%d-%m-%Y %H:%M:%S", time.localtime(os.path.getmtime('currentchallenger'))) + " MST")
 
         await client.send_message(message.channel, embed=embed)
 
@@ -590,7 +597,7 @@ async def on_message(message):
 
 
         embed = discord.Embed(color=0xCC00CC, title="Winrate in Ranked", description=str(findwinrate(playerid)))
-        embed.set_footer(text="Data retreived on: " + datetime.datetime.now().strftime("%d-%m-%Y %H:%M:%S"))
+        embed.set_footer(text="Data retreived on: " + datetime.datetime.now().strftime("%d-%m-%Y %H:%M:%S") + " MST")
         await client.send_message(message.channel, embed=embed)
 
 from bottoken import token
