@@ -63,9 +63,19 @@ def itemstrim(trim):
     item = {}   
     item['cost'] = str(trim['gold']['total'])
     item['sell'] = str(trim['gold']['sell'])
-    item['into'] = trim['into']
     item['name'] = str(trim['name'])
     item['desc'] = str(trim['description'])
+
+    item['desc'] = item['desc'].replace('<br>', '\n')
+    item['desc'] = re.sub("(<.*?>)", '', item['desc']) 
+    embed = discord.Embed(color=0xCC00CC, title=item['name']) 
+    try:
+        item['into'] = trim['into']
+    except KeyError: 
+        embed.add_field(name="Costs", value=item['cost'])
+        embed.add_field(name="Sells for", value=item['sell'])
+        embed.add_field(name="Description", value=item['desc'], inline=False)
+        return embed
 
     i = 0
     buildsinto = ''
@@ -76,18 +86,10 @@ def itemstrim(trim):
             buildsinto += str(valuestoitems[str(item['into'][i])])
         i += 1
 
-    item['desc'] = item['desc'].replace('<br>', '\n')
-    item['desc'] = re.sub("(<.*?>)", '', item['desc'])
-
-    embed = discord.Embed(color=0xCC00CC, title=item['name']) 
     if buildsinto:
         embed.add_field(name="Costs", value=item['cost'])
         embed.add_field(name="Sells for", value=item['sell'])
         embed.add_field(name="Builds into", value=buildsinto, inline=False)
-        embed.add_field(name="Description", value=item['desc'], inline=False)
-    else:
-        embed.add_field(name="Costs", value=item['cost'])
-        embed.add_field(name="Sells for", value=item['sell'])
         embed.add_field(name="Description", value=item['desc'], inline=False)
 
     return embed

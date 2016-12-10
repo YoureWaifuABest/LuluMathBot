@@ -18,20 +18,75 @@ def find_values(id, json_repr):
     return results
 
 def findchamp(champion, find, patch):
+    global param
     champion = champion.capitalize()
 
-    json_repr = open('ddragon/' + patch + '/data/en_US/champion/' + champion + '.json').read()
+    if not os.path.exists('data/championID'):
+        r = requests.get('https://global.api.pvp.net/api/lol/static-data/na/v1.2/champion', params=param)
+        if r.status_code != 200:
+            return -1
+        f = open('data/championID', 'w')
+        f.write(r.text)
+        f.close()
+    elif time.time() - os.path.getmtime('championID') > 7200:
+        r = requests.get('https://global.api.pvp.net/api/lol/static-data/na/v1.2/champion', params=param)
+        if r.status_code != 200:
+            return -1
+        f = open('data/championID', 'w')
+        f.write(r.text)
+        f.close()
 
-    f = find_values(find, json_repr)
+    f = open('data/championID', 'r')
+    text = find_values('data', f.read())
+    cid  = str(text[0][champion]['id'])
+    f.close()
 
-    return  f
+    if not os.path.exists('data/' + champion + find):
+        param['champData'] = find
+        r = requests.get('https://global.api.pvp.net/api/lol/static-data/na/v1.2/champion/' + cid, params=param)
+        if r.status_code != 200:
+            return -1
+        f = open('data/' + champion + find, 'w')
+        f.write(r.text)
+        f.close()
+    elif time.time() - os.path.getmtime('data/' + champion + find) > 7200:
+        param['champData'] = find
+        r = requests.get('https://global.api.pvp.net/api/lol/static-data/na/v1.2/champion/' + cid, params=param)
+        if r.status_code != 200:
+            return -1
+        f = open('data' + champion + find, 'w')
+        f.write(r.text)
+        f.close()
+
+    f = open('data/' + champion + find, 'r')
+    text = find_values(find, f.read())
+    f.close()
+
+    return text
            
 def finditem(item, patch):
-    json_repr = open('ddragon/' + patch +'/data/en_US/item.json').read()
+    global param
+    
+    param['itemData'] = 'all'
+    if not os.path.exists('data/' + str(item)):
+        r = requests.get('https://global.api.pvp.net/api/lol/static-data/na/v1.2/item/' + str(item), params=param)
+        if r.status_code != 200:
+            return -1
+        f = open('data/' + str(item), 'w')
+        f.write(r.text)
+        f.close()
+    elif time.time() - os.path.getmtime('data/' + str(item)) > 7200:
+        r = requests.get('https://global.api.pvp.net/api/lol/static-data/na/v1.2/item/' + str(item), params=param)
+        if r.status_code != 200:
+            return -1
+        f = open('data/' + str(item), 'w')
+        f.write(r.text)
+        f.close()
 
-    output = find_values('data', json_repr)
+    f = open('data/' + str(item))
 
-    new = output[0][item]
+    new = json.loads(f.read())
+    f.close()
 
     return new
 
@@ -52,14 +107,14 @@ def challenger():
     global param
     param['type'] = 'RANKED_SOLO_5x5'
 
-    if not os.path.exists('currentchallenger'):
+    if not os.path.exists('data/currentchallenger'):
         r = requests.get('https://na.api.pvp.net/api/lol/na/v2.5/league/challenger', params=param)
         if r.status_code != 200:
             return -1
-        f = open('currentchallenger', 'w') 
+        f = open('data/currentchallenger', 'w') 
         f.write(r.text)
         f.close()
-    elif time.time() - os.path.getmtime('currentchallenger') > 1800:
+    elif time.time() - os.path.getmtime('data/currentchallenger') > 1800:
         r = requests.get('https://na.api.pvp.net/api/lol/na/v2.5/league/challenger', params=param)
         if r.status_code != 200:
             return -1
@@ -67,7 +122,7 @@ def challenger():
         f.write(r.text)
         f.close()
 
-    f = open('currentchallenger', 'r')
+    f = open('data/currentchallenger', 'r')
 
     text = find_values('entries', f.read())
     f.close()
@@ -106,3 +161,5 @@ def findwinrate(playerid):
     winrate = i['wins'] / (i['wins'] + i['losses'])
 
     return winrate
+
+finditem(3089, '6.24.1')

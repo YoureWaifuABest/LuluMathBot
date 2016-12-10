@@ -13,7 +13,7 @@ from findvalues import findchamp, finditem, challenger, findid, findwinrate
 from itemdict import itemstovalues, valuestoitems, colloq
 
 client = discord.Client()
-patch = "6.23.1"
+patch = "6.24.1"
 
 # enable logging
 logger = logging.getLogger('discord')
