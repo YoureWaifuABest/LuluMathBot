@@ -16,8 +16,8 @@ Thumbs.db
 bottoken.py
 apikey.py
 
-# Current Challenger
-currentchallenger
+# Data
+data
 
-# Data Dragon
-ddragon
+# Log
+discord.log
