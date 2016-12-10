@@ -14,7 +14,7 @@ Discord bot to do basic League of Legends related math and output League of Lege
 8. Will respond to certain phrases (for fun)
 9. Some other fun phrases (8ball, rng)
 
-5 & 7 will be seperated into seperate bots eventually. Or maybe not.
+7 & 8 will be seperated into seperate bots eventually. Or maybe not.
 
 ## Dependencies
 1. Python3.5+
@@ -22,10 +22,9 @@ Discord bot to do basic League of Legends related math and output League of Lege
 
 ## Installation
 1. `git clone [this repo]`
-2. Download Riot's datadragon and untar it into the location of the repo.
-3. Add your bot's token to bottoken.py
-4. Add your Riot API token to apitoken.py
-5. Launch it and it'll probably work.
+2. Add your bot's token to bottoken.py
+3. Add your Riot API token to apitoken.py
+4. Launch it and it'll probably work.
 
 ### Disclaimer
 LuluMathBot isn't endorsed by Riot Games and doesn't reflect the views or opinions of Riot Games

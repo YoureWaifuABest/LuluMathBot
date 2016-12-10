@@ -83,7 +83,7 @@ def finditem(item, patch):
         f.write(r.text)
         f.close()
 
-    f = open('data/' + str(item))
+    f = open('data/' + str(item), 'r')
 
     new = json.loads(f.read())
     f.close()
@@ -91,10 +91,26 @@ def finditem(item, patch):
     return new
 
 def finditemval(item, patch):
-    json_repr = open('ddragon/' + patch +'/data/en_US/item.json').read()
+    global param
 
-    output = find_values('data', json_repr)
+    if not os.path.exists('data/items'):
+        r = requests.get('https://global.api.pvp.net/api/lol/static-data/na/v1.2/item', params=param)
+        if r.status_code != 200:
+            return -1
+        f = open('data/items', 'w')
+        f.write(r.text)
+        f.close()
+    elif time.time() - os.path.getmtime('data/' + str(item)) > 115200:
+        r = requests.get('https://global.api.pvp.net/api/lol/static-data/na/v1.2/item', params=param)
+        if r.status_code != 200:
+            return -1
+        f = open('data/items', 'w')
+        f.write(r.text)
+        f.close()
 
+    f = open('data/items', 'r')
+
+    output = find_values('data', f.read())
     keys = output[0]
 
     indexx = {}
@@ -161,5 +177,3 @@ def findwinrate(playerid):
     winrate = i['wins'] / (i['wins'] + i['losses'])
 
     return winrate
-
-finditem(3089, '6.24.1')
