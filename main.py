@@ -13,7 +13,6 @@ from findvalues import findchamp, finditem, challenger, findid, findwinrate
 from itemdict import itemstovalues, valuestoitems, colloq
 
 client = discord.Client()
-patch = "6.24.1"
 
 # enable logging
 logger = logging.getLogger('discord')
@@ -352,8 +351,10 @@ async def on_message(message):
         if len(possible) == 1:
             item = possible[0]
             value = itemstovalues[item]
-            output = finditem(value, patch)
+            output = finditem(value)
             new_out = itemstrim(output)
+            new_out.set_footer(text="Data retreived on: " + time.strftime("%d-%m-%Y %H:%M:%S", 
+                             time.localtime(os.path.getmtime('data/' + itemstovalues[item]))) + " MST")
             await client.send_message(message.channel, embed=new_out)
         elif len(possible) == 0:
             embed = discord.Embed(color=0xFF0022, title="ERROR", description="Item not found!\nPlease input an actual item.")
@@ -390,9 +391,9 @@ async def on_message(message):
             return 0
         
         if argv[2] != 'help':
-            try:
-                output = findchamp(argv[2], argv[1], patch)
-            except FileNotFoundError:
+            output = findchamp(argv[2], argv[1])
+            argv[2] = argv[2].capitalize()
+            if output == -1:
                 embed = discord.Embed(color=0xFF0022, title="ERROR", description="No such champion!")
                 embed.add_field(name="Usage", value="`!champ help`")
                 await client.send_message(message.channel, embed=embed)
@@ -407,9 +408,13 @@ async def on_message(message):
             except IndexError:
                 new_out = output[0].replace('<br>', '\n')
                 embed = discord.Embed(color=0xCC00CC, title="Lore", description=new_out[:1000])
+                embed.set_footer(text="Data retreived on: " + time.strftime("%d-%m-%Y %H:%M:%S", 
+                                       time.localtime(os.path.getmtime('data/' + argv[2] + argv[1]))) + " MST")
                 await client.send_message(message.channel, embed=embed)
                 if argv[1] == 'lore':
                     embed = discord.Embed(color=0xCC00CC, description=new_out[1000:])
+                    embed.set_footer(text="Data retreived on: " + time.strftime("%d-%m-%Y %H:%M:%S", 
+                                     time.localtime(os.path.getmtime('data/' + argv[2] + argv[1]))) + " MST")
                     await client.send_message(message.channel, embed=embed)
                 return 0
             if argv[3] == 'help':
@@ -453,6 +458,8 @@ async def on_message(message):
                     embed.add_field(name="Please use", value="`!champ stats champion keys` to list possible keys")
                     await client.send_message(message.channel, embed=embed)
                     return -1
+            new_out.set_footer(text="Data retreived on: " + time.strftime("%d-%m-%Y %H:%M:%S", 
+                                   time.localtime(os.path.getmtime('data/' + argv[2] + argv[1]))) + " MST")
             await client.send_message(message.channel, embed=new_out)
         elif argv[1] == 'spells':
             if argv[2] == 'help':
@@ -497,6 +504,8 @@ async def on_message(message):
                 argv[3]
             except IndexError:
                 new_out = discord.Embed(color=0xCC00CC, title="Skins" , description=skinstrim(output))
+                new_out.set_footer(text="Data retreived on: " + time.strftime("%d-%m-%Y %H:%M:%S", 
+                                   time.localtime(os.path.getmtime('data/' + argv[2] + argv[1]))) + " MST")
                 await client.send_message(message.channel, embed=new_out)
                 return 0
             if argv[3] == 'help':
@@ -519,6 +528,8 @@ async def on_message(message):
                     new_out += i + ' '
                 new_out += ''
                 embed  = discord.Embed(title="Tags", color=0xCC00CC, description=new_out)
+                embed.set_footer(text="Data retreived on: " + time.strftime("%d-%m-%Y %H:%M:%S", 
+                                       time.localtime(os.path.getmtime('data/' + argv[2] + argv[1]))) + " MST")
                 await client.send_message(message.channel, embed=embed)
                 return 0
             if argv[3] == 'help':
@@ -556,7 +567,7 @@ async def on_message(message):
         embed.add_field(name="Position", value=position)
         embed.add_field(name="Summoner", value=name)
         embed.add_field(name="LP",       value=lp)
-        embed.set_footer(text="Data retreived on: " + time.strftime("%d-%m-%Y %H:%M:%S", time.localtime(os.path.getmtime('currentchallenger'))) + " MST")
+        embed.set_footer(text="Data retreived on: " + time.strftime("%d-%m-%Y %H:%M:%S", time.localtime(os.path.getmtime('data/currentchallenger'))) + " MST")
 
         await client.send_message(message.channel, embed=embed)
 

@@ -17,7 +17,7 @@ def find_values(id, json_repr):
     json.loads(json_repr, object_hook=_decode_dict)
     return results
 
-def findchamp(champion, find, patch):
+def findchamp(champion, find):
     global param
     champion = champion.capitalize()
 
@@ -28,7 +28,7 @@ def findchamp(champion, find, patch):
         f = open('data/championID', 'w')
         f.write(r.text)
         f.close()
-    elif time.time() - os.path.getmtime('championID') > 7200:
+    elif time.time() - os.path.getmtime('data/championID') > 7200:
         r = requests.get('https://global.api.pvp.net/api/lol/static-data/na/v1.2/champion', params=param)
         if r.status_code != 200:
             return -1
@@ -64,7 +64,7 @@ def findchamp(champion, find, patch):
 
     return text
            
-def finditem(item, patch):
+def finditem(item):
     global param
     
     param['itemData'] = 'all'
@@ -90,7 +90,7 @@ def finditem(item, patch):
 
     return new
 
-def finditemval(item, patch):
+def finditemval(item):
     global param
 
     if not os.path.exists('data/items'):
