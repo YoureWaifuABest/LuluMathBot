@@ -54,7 +54,7 @@ def findchamp(champion, find):
         r = requests.get('https://global.api.pvp.net/api/lol/static-data/na/v1.2/champion/' + cid, params=param)
         if r.status_code != 200:
             return -1
-        f = open('data' + champion + find, 'w')
+        f = open('data/' + champion + find, 'w')
         f.write(r.text)
         f.close()
 
