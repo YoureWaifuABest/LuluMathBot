@@ -108,9 +108,12 @@ async def on_message(message):
         await client.edit_message(tmp, 'You have {} messages.'.format(counter))
 
     if message.content.startswith('!help'):
-        embed = discord.Embed(color=0xCC00CC)
-        embed.add_field(name="Commands", value="!help, !reduction, !lethality, !damage, !champ, !item, !source, !license, !winrate, !challenger, !rank\n" +
-                                               "Add help as an argument to any command to get help with it", inline=True)
+        embed = discord.Embed(color=0xCC00CC, title="Commands")
+        embed.add_field(name="General", value="`!help !source !license`")
+        embed.add_field(name="Calculations", value="`!reduction !lethality !damage`")
+        embed.add_field(name="Static Data", value="`!champ !item`")
+        embed.add_field(name="Summoner Data", value="`!winrate !challenger !rank`")
+        embed.set_footer(text="Add help as an argument to any command to get help with it.")
         await client.send_message(message.channel, embed=embed)
 
     if message.content.startswith('!source'):
@@ -119,7 +122,7 @@ async def on_message(message):
     if message.content.startswith('!license'):
         embed = discord.Embed(color=0xCC00CC, title="License", description=open('LICENSE', 'r').read())
         await client.send_message(message.channel, embed=embed)
-        embed = discord.Embed(color=0xCC00CC, title="Attribution", description="LuluMathBot isn't endorsed by Riot Games and" +
+        embed = discord.Embed(color=0xCC00CC, title="Attribution", description="LuluMathBot isn't endorsed by Riot Games and " +
                                                                                "doesn't reflect the views or opinions of Riot Games or anyone " +
                                                                                "officially involved in producing or managing League of Legends. " +
                                                                                "League of Legends and Riot Games are trademarks or registered " +
