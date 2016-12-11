@@ -134,7 +134,7 @@ def challenger():
         r = requests.get('https://na.api.pvp.net/api/lol/na/v2.5/league/challenger', params=param)
         if r.status_code != 200:
             return -1
-        f = open('currentchallenger', 'w')
+        f = open('data/currentchallenger', 'w')
         f.write(r.text)
         f.close()
 
@@ -177,3 +177,17 @@ def findwinrate(playerid):
     winrate = i['wins'] / (i['wins'] + i['losses'])
 
     return winrate
+
+def findrank(playerid):
+    global param
+
+    r = requests.get('https://na.api.pvp.net/api/lol/na/v2.5/league/by-summoner/' + str(playerid) + '/entry', params=param)
+
+    out = find_values(str(playerid), r.text)
+
+    try:
+        out[0][0]
+    except IndexError:
+        return -1
+
+    return out[0][0]
