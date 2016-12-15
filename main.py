@@ -38,6 +38,13 @@ async def on_message(message):
         if str(message.author) == 'sam sam#7213':
             await client.send_message(message.channel, 'sam pls')
 
+    # Was too lazy to properly do this. Having Lulu respond to any greeting at all
+    # Would be incredibly annoying.
+    # But a message this specific won't ever happen unless someone reads the code or I tell them about it.
+    # Optimal inbetween would be for this to happen sometimes accidentally, but not very often.
+    #
+    # Unrelated, considering switching to another language because python's multiline comment is 
+    # absolutely disgusting (or rather python's lack thereof)
     if message.content.lower().startswith('hello!!!'):
         await client.send_message(message.channel, 'Pleased to meet you!')
 
@@ -50,10 +57,11 @@ async def on_message(message):
             await client.send_message(message.channel, embed=embed)
             return 0
 
+        # Possibly use isdigit instead
         try:
             float(argv[1])
         except:
-            embed = discord.Embed(color=0xFF0022, title="ERROR", description="Argument not a number!")
+            embed = discord.Embed(color=0xFF0022, title="ERROR", description="Argument is not a number!")
             embed.add_field(name="See", value="`!random help`")
             await client.send_message(message.channel, embed=embed)
             return -1
@@ -61,7 +69,7 @@ async def on_message(message):
         try: 
             float(argv[2])
         except:
-            embed = discord.Embed(color=0xFF0022, title="ERROR", description="Argument not a number!")
+            embed = discord.Embed(color=0xFF0022, title="ERROR", description="Argument is not a number!")
             embed.add_field(name="See", value="!random help")
             await client.send_message(message.channel, embed=embed)
             return -1
@@ -74,6 +82,7 @@ async def on_message(message):
     if message.content.lower().startswith('!8ball'):
         argc, argv = getargs(message.content)
         
+        # indexing from 1 is kind of silly here
         i = 1
         item = ''
         while i < argc+1:
@@ -98,6 +107,8 @@ async def on_message(message):
             await client.send_message(message.channel, 'Definitely not.')
 
     #### Administrative Stuff ####
+    
+    # There's no real reason to leave this in
     if message.content.startswith('!test'):
         counter = 0
         tmp = await client.send_message(message.channel, 'Calculating messages...')
@@ -122,6 +133,8 @@ async def on_message(message):
     if message.content.startswith('!license'):
         embed = discord.Embed(color=0xCC00CC, title="License", description=open('LICENSE', 'r').read())
         await client.send_message(message.channel, embed=embed)
+        # Not sure if this is displayed prominently enough for Riot
+        # I can't think of any place that it would be better placed, however.
         embed = discord.Embed(color=0xCC00CC, title="Attribution", description="LuluMathBot isn't endorsed by Riot Games and " +
                                                                                "doesn't reflect the views or opinions of Riot Games or anyone " +
                                                                                "officially involved in producing or managing League of Legends. " +
@@ -130,6 +143,10 @@ async def on_message(message):
                                                                                "Inc.")
         await client.send_message(message.channel, embed=embed)
 
+    # This will eventually be seperated into another bot.
+    # It's included for now because the (currently only) server Lulu's used on doesn't have
+    # Any other bots.
+    # Not sure if the limit's necessary. I don't want to purge a million messages at once, though.
     if message.content.startswith('!clear'):
         if message.channel.permissions_for(message.author).manage_messages:
             await client.purge_from(message.channel, limit=500)
@@ -137,6 +154,10 @@ async def on_message(message):
             await client.send_message(message.channel, 'You do not have permission to use this command!')
 
     #### Math ####
+
+    # This function's mostly useless, since it's literally just basic multiplication.
+    # My plan to improve it is to have it get data from rito's API and stuff
+    # But that's more work than I'm able to put in right now
     if message.content.startswith('!damage'):
         argc, argv = getargs(message.content)
 
@@ -303,6 +324,7 @@ async def on_message(message):
             await client.send_message(message.channel, embed=embed)
             return -1
 
+        # Wonder if Riot will ever change the formula
         lethality = 0.4 * float(argv[1]) + ((0.6 * float(argv[1]) * float(argv[2]))/18)
         embed = discord.Embed(color=0xCC00CC)
         embed.add_field(name="Effective Armor Pen", value="__" + str(lethality) + "__")
@@ -326,6 +348,9 @@ async def on_message(message):
             await client.send_message(message.channel, embed=embed)
             return 0
         
+        # Once again, the way this is done feels very wrong.
+        # I could do i = 0, argc instead of i = 1
+        # Probably will when I have time to clean up more
         i = 1
         item = ''
         while i < argc+1:
@@ -402,6 +427,7 @@ async def on_message(message):
                 await client.send_message(message.channel, embed=embed)
                 return -1
 
+        # Considerable to do some work on this behemoth of an if-else
         if argv[1] == 'lore' or argv[1] == 'blurb':
             if argv[2] == 'help':
                 await client.send_message(message.channel, 'No possible options!\n')
@@ -576,6 +602,8 @@ async def on_message(message):
 
         await client.send_message(message.channel, embed=embed)
 
+    # This function was mostly used to test the Riot API
+    # I'll replace it fully with !rank pretty soon
     if message.content.lower().startswith("!winrate"):
         argc, argv = getargs(message.content)
 
@@ -627,6 +655,8 @@ async def on_message(message):
             await client.send_message(message.channel, embed=embed)
             return -1
         
+        # Same issue. What if name is help?
+        # There is a summoner with that name. Is it fine for him to be impossible to look up?
         if argv[1] == 'help':
             embed = discord.Embed(color=0xCC00CC, title='Help', description='Prints ranked stats of a player')
             embed.add_field(name="Usage", value="`!rank player`", inline=False)
