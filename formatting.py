@@ -3,47 +3,74 @@ import asyncio
 from itemdict import valuestoitems
 import re
 
-def statstrim(trim, champ):
-    armor    = str(trim[0]['armor'])
-    armorLvl = str(trim[0]['armorperlevel'])
-    mrBase   = str(trim[0]['spellblock'])
-    mrPerLvl = str(trim[0]['spellblockperlevel'])
-    health   = str(trim[0]['hp'])
-    healthLv = str(trim[0]['hpperlevel'])
-    hpregen  = str(trim[0]['hpregen'])
-    hpregLvl = str(trim[0]['hpregenperlevel'])
-    mana     = str(trim[0]['mp'])
-    mpPerLvl = str(trim[0]['mpperlevel'])
-    mpRegen  = str(trim[0]['mpregen'])
-    mpRegLvl = str(trim[0]['mpregenperlevel'])
-    moveSpd  = str(trim[0]['movespeed'])
-    asOffset = str(trim[0]['attackspeedoffset'])
-    asPerLvl = str(trim[0]['attackspeedperlevel'])
-    atkRange = str(trim[0]['attackrange'])
-    adBase   = str(trim[0]['attackdamage'])
-    adPerLvl = str(trim[0]['attackdamageperlevel'])
+def statstrim(trim, champ, level):
+    armor    = trim[0]['armor']
+    armorLvl = trim[0]['armorperlevel']
+    mrBase   = trim[0]['spellblock']
+    mrPerLvl = trim[0]['spellblockperlevel']
+    health   = trim[0]['hp']
+    healthLv = trim[0]['hpperlevel']
+    hpregen  = trim[0]['hpregen']
+    hpregLvl = trim[0]['hpregenperlevel']
+    mana     = trim[0]['mp']
+    mpPerLvl = trim[0]['mpperlevel']
+    mpRegen  = trim[0]['mpregen']
+    mpRegLvl = trim[0]['mpregenperlevel']
+    moveSpd  = trim[0]['movespeed']
+    asOffset = trim[0]['attackspeedoffset']
+    asPerLvl = trim[0]['attackspeedperlevel']
+    atkRange = trim[0]['attackrange']
+    adBase   = trim[0]['attackdamage']
+    adPerLvl = trim[0]['attackdamageperlevel']
+
+    atspd = 0.625 / (1 + asOffset)
 
     embed = discord.Embed(color=0xCC00CC)
-    embed.add_field(name="Armor", value=armor, inline=True)
-    embed.add_field(name="Armor Per Level", value=armorLvl, inline=True)
-    embed.add_field(name="Magic Resist", value=mrBase, inline=True)
-    embed.add_field(name="Magic Resist Per Level", value=mrPerLvl, inline=True)
-    embed.add_field(name="Health", value=health, inline=True)
-    embed.add_field(name="Health Per Level", value=healthLv, inline=True)
-    embed.add_field(name="Health Regen", value=hpregLvl, inline=True)
-    embed.add_field(name="Health Regen Per Level", value=hpregLvl, inline=True)
-    embed.add_field(name="Mana", value=mana, inline=True)
-    embed.add_field(name="Mana Per Level", value=mpPerLvl, inline=True)
-    embed.add_field(name="Mana Regen", value=mpRegen, inline=True)
-    embed.add_field(name="Mana Regen Per Level", value=mpRegLvl, inline=True)
-    embed.add_field(name="Movement Speed", value=moveSpd, inline=True)
-    embed.add_field(name="Attack Speed Offset", value=asOffset, inline=True)
-    embed.add_field(name="Attack Range", value=atkRange, inline=True)
-    embed.add_field(name="Attack Damage", value=adBase, inline=True)
-    embed.add_field(name="Attack Damage Per Level", value=adPerLvl, inline=True)
-    embed.set_author(name='Stats', icon_url="http://ddragon.leagueoflegends.com/cdn/6.23.1/img/champion/" + champ.capitalize() + ".png")
+    if level == 'all':
+        embed.add_field(name="Armor", value=armor, inline=True)
+        embed.add_field(name="Armor Growth", value=armorLvl, inline=True)
+        embed.add_field(name="Magic Resist", value=mrBase, inline=True)
+        embed.add_field(name="Magic Resist Growth", value=mrPerLvl, inline=True)
+        embed.add_field(name="Health", value=health, inline=True)
+        embed.add_field(name="Health Growth", value=healthLv, inline=True)
+        embed.add_field(name="Health Regen", value=hpregLvl, inline=True)
+        embed.add_field(name="Health Regen Growth", value=hpregLvl, inline=True)
+        embed.add_field(name="Mana", value=mana, inline=True)
+        embed.add_field(name="Mana Growth", value=mpPerLvl, inline=True)
+        embed.add_field(name="Mana Regen", value=mpRegen, inline=True)
+        embed.add_field(name="Mana Regen Growth", value=mpRegLvl, inline=True)
+        embed.add_field(name="Movement Speed", value=moveSpd, inline=True)
+        embed.add_field(name="Attack Speed Offset", value=asOffset, inline=True)
+        embed.add_field(name="Base Attack Speed", value=atspd, inline=True)
+        embed.add_field(name="Attack Speed Per Level", value=asPerLvl, inline=True)
+        embed.add_field(name="Attack Range", value=atkRange, inline=True)
+        embed.add_field(name="Attack Damage", value=adBase, inline=True)
+        embed.add_field(name="Attack Damage Growth", value=adPerLvl, inline=True)
+    else:
+        armor   = statlvl(armor,   armorLvl, int(level))
+        mres    = statlvl(mrBase,  mrPerLvl, int(level))
+        health  = statlvl(health,  healthLv, int(level)) 
+        hpregen = statlvl(hpregen, hpregLvl, int(level))
+        mana    = statlvl(mana,    mpPerLvl, int(level))
+        mpRegen = statlvl(mpRegen, mpRegLvl, int(level))
+        ad      = statlvl(adBase,  adPerLvl, int(level))
+        atspdin = statlvl(0,       asPerLvl, int(level))
 
+        embed.add_field(name="Armor", value=armor, inline=True)
+        embed.add_field(name="Magic Resist", value=mres)
+        embed.add_field(name="Health", value=health)
+        embed.add_field(name="Health Regen", value=hpregen)
+        embed.add_field(name="Mana", value=mana)
+        embed.add_field(name="Mana Regen", value=mpRegen)
+        embed.add_field(name="Attack Speed", value=str(atspd) + ' + ' + str(atspdin) + '%')
+        embed.add_field(name="Attack Damage", value=ad)
+
+    embed.set_author(name='Stats', icon_url="http://ddragon.leagueoflegends.com/cdn/6.23.1/img/champion/" + champ.capitalize() + ".png") 
     return embed
+
+def statlvl(base, growth, level):
+    return base + (growth * (level-1) * (.685+(.0175 * level)))
+
 
 def skinstrim(trim):
     skin = []

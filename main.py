@@ -432,8 +432,8 @@ async def on_message(message):
             if argv[2] == 'help':
                 embed = discord.Embed(color=0xCC00CC)
                 embed.add_field(name="Usage", value="`!champ stats champion options`", inline=False)
-                embed.add_field(name="Options", value="help (prints this help message), all (prints keys + values), keys (prints just keys), or a certain key." +
-                                                      " Defaults to all.")
+                embed.add_field(name="Options", value="help (prints this help message), all (prints keys + values), keys (prints just keys), a certain key, or" +
+                                                      " a level, 1-18 (prints stats at a certain level).  Defaults to all.")
                 await client.send_message(message.channel, embed=embed)
                 return 0
 
@@ -444,12 +444,14 @@ async def on_message(message):
             if argv[3] == 'help':
                 embed = discord.Embed(color=0xCC00CC)
                 embed.add_field(name="Usage", value="`!champ stats champion options`", inline=False)
-                embed.add_field(name="Options", value="help (prints this help message), all (prints keys + values), keys (prints just keys), or a certain key." +
-                                                      " Defaults to all.")
+                embed.add_field(name="Options", value="help (prints this help message), all (prints keys + values), keys (prints just keys), a certain key, or" +
+                                                      " a level, 1-18 (prints stats at a certain level). Defaults to all.")
                 await client.send_message(message.channel, embed=embed)
                 return 0
             elif argv[3] == 'all':
-                new_out = statstrim(output, argv[2])
+                new_out = statstrim(output, argv[2], argv[3])
+            elif argv[3].isdigit():
+                new_out = statstrim(output, argv[2], argv[3])
             elif argv[3] == 'keys':
                 # Format this later, since it's super ugly
                 new_out = discord.Embed(color=0xCC00CC, title="Keys", description=str(output[0].keys()))
