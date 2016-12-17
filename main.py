@@ -9,7 +9,7 @@ from random import randint
 from formatting import skinstrim, itemstrim, statstrim, rankedtrim
 from getargs   import getargs
 from getdigits import getdigits
-from findvalues import findchamp, finditem, challenger, findid, findwinrate, findrank
+from findvalues import findchamp, finditem, challenger, findid, findwinrate, findrank, findchampid, findchampstats
 from itemdict import itemstovalues, valuestoitems, colloq
 
 client = discord.Client()
@@ -419,7 +419,7 @@ async def on_message(message):
             return 0
         
         if argv[2] != 'help':
-            output = findchamp(argv[2], argv[1])
+            output = findchamp(argv[2], str(findchampid(argv[2])), argv[1])
             argv[2] = argv[2].capitalize()
             if output == -1:
                 embed = discord.Embed(color=0xFF0022, title="ERROR", description="No such champion!")
@@ -659,7 +659,8 @@ async def on_message(message):
         # There is a summoner with that name. Is it fine for him to be impossible to look up?
         if argv[1] == 'help':
             embed = discord.Embed(color=0xCC00CC, title='Help', description='Prints ranked stats of a player')
-            embed.add_field(name="Usage", value="`!rank player`", inline=False)
+            embed.add_field(name="Usage", value="`!rank player [options]`", inline=False)
+            embed.add_field(name="Options", value="champ (prints data on a certain champ). Leave blank to print player's ranked stats.")
             await client.send_message(message.channel, embed=embed)
             return 0
 
@@ -680,9 +681,40 @@ async def on_message(message):
             await client.send_message(message.channel, embed=embed)
             return -1
 
-        embed = rankedtrim(findrank(str(playerid)))
-        embed.set_footer(text="Data retreived on: " + datetime.datetime.now().strftime("%d-%m-%Y %H:%M:%S") + " MST")
-        await client.send_message(message.channel, embed=embed)
+        try:
+            argv[2]
+        except IndexError:
+            argv.append('default')
+
+        if argv[2] == 'default':
+            embed = rankedtrim(findrank(str(playerid)))
+            embed.set_footer(text="Data retreived on: " + datetime.datetime.now().strftime("%d-%m-%Y %H:%M:%S") + " MST")
+            await client.send_message(message.channel, embed=embed)
+            return 0
+        elif argv[2] == 'champ':
+            try:
+                argv[3]
+            except IndexError:
+                embed = discord.Embed(color=0xFF0022, title="ERROR", description="Too few arguments")
+                embed.add_field(name="Usage", value="`!rank player champ champion`")
+                await client.send_message(message.channel, embed=embed)
+                return -1
+
+            cid = findchampid(argv[3])
+            if cid == -1:
+                embed = discord.Embed(color=0xFF0022, title="ERROR", description="Champion does not exist!")
+                embed.add_field(name="Usage", value="`!rank player champ champion")
+                await client.send_message(message.channel, embed=embed)
+                return -1
+
+            stats = findchampstats(cid, playerid)
+            stats = stats['stats']
+
+            embed = discord.Embed(color=0xCC00CC, title=argv[3].capitalize() + " Stats")
+            embed.add_field(name="KDA", value=(stats['totalChampionKills'] + stats['totalAssists']) / stats['totalDeathsPerSession'])
+            embed.add_field(name="Winrate", value=str((stats['totalSessionsWon'] / stats['totalSessionsPlayed']) * 100) + "%")
+            await client.send_message(message.channel, embed=embed) 
+            return 0
 
 from bottoken import token
 client.run(token)

@@ -17,9 +17,10 @@ def find_values(id, json_repr):
     json.loads(json_repr, object_hook=_decode_dict)
     return results
 
-def findchamp(champion, find):
+
+def findchampid(champ):
     global param
-    champion = champion.capitalize()
+    champ = champ.capitalize()
 
     if not os.path.exists('data/championID'):
         r = requests.get('https://global.api.pvp.net/api/lol/static-data/na/v1.2/champion', params=param)
@@ -28,7 +29,7 @@ def findchamp(champion, find):
         f = open('data/championID', 'w')
         f.write(r.text)
         f.close()
-    elif time.time() - os.path.getmtime('data/championID') > 7200:
+    elif time.time() - os.path.getmtime('data/championID') > 3600:
         r = requests.get('https://global.api.pvp.net/api/lol/static-data/na/v1.2/champion', params=param)
         if r.status_code != 200:
             return -1
@@ -37,28 +38,33 @@ def findchamp(champion, find):
         f.close()
 
     f = open('data/championID', 'r')
-    text = find_values('data', f.read())
-    cid  = str(text[0][champion]['id'])
+
+    out = find_values(champ.capitalize(), f.read())
     f.close()
 
-    if not os.path.exists('data/' + champion + find):
-        param['champData'] = find
+    return out[0]['id']
+
+def findchamp(champ, cid, find):
+    global param
+    champ = champ.capitalize()
+    param['champData'] = find
+
+    if not os.path.exists('data/' + champ + find):
         r = requests.get('https://global.api.pvp.net/api/lol/static-data/na/v1.2/champion/' + cid, params=param)
         if r.status_code != 200:
             return -1
-        f = open('data/' + champion + find, 'w')
+        f = open('data/' + champ + find, 'w')
         f.write(r.text)
         f.close()
-    elif time.time() - os.path.getmtime('data/' + champion + find) > 7200:
-        param['champData'] = find
+    elif time.time() - os.path.getmtime('data/' + champ + find) > 7200:
         r = requests.get('https://global.api.pvp.net/api/lol/static-data/na/v1.2/champion/' + cid, params=param)
         if r.status_code != 200:
             return -1
-        f = open('data/' + champion + find, 'w')
+        f = open('data/' + champ + find, 'w')
         f.write(r.text)
         f.close()
 
-    f = open('data/' + champion + find, 'r')
+    f = open('data/' + champ + find, 'r')
     text = find_values(find, f.read())
     f.close()
 
@@ -161,7 +167,7 @@ def findid(player):
 
 def findwinrate(playerid):
     global param
-    param['season'] = "SEASON2016"
+    param['season'] = "SEASON2017"
 
     r = requests.get('https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/' + str(playerid) + '/summary', params=param)
 
@@ -191,3 +197,18 @@ def findrank(playerid):
         return -1
 
     return out[0][0]
+
+def findchampstats(cid, playerid):
+    global param
+
+    param['season'] = "SEASON2017"
+
+    r = requests.get('https://na.api.pvp.net/api/lol/na/v1.3/stats/by-summoner/' + str(playerid) + '/ranked', params=param)
+
+    out = find_values("champions", r.text)
+
+    for i in out[0]:
+        if i['id'] == cid:
+            out = i
+
+    return out
