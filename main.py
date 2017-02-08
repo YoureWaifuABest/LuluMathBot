@@ -31,6 +31,11 @@ async def on_ready():
 @client.event
 async def on_message(message):
     #### Fun Stuff ####
+    if message.content.lower().startswith('???'):
+        embed = discord.Embed(color=0xCC00CC, title="????")
+        embed.set_image(url="http://i0.kym-cdn.com/entries/icons/facebook/000/018/489/nick-young-confused-face-300x256_nqlyaa.jpg")
+        await client.send_message(message.channel, embed=embed)
+ #       await client.send_message(message.channel, 'http://i0.kym-cdn.com/entries/icons/facebook/000/018/489/nick-young-confused-face-300x256_nqlyaa.jpg')
     if message.content.lower().startswith('that tasted'):
         await client.send_message(message.channel, 'purple!')
 
@@ -288,7 +293,8 @@ async def on_message(message):
             stri = ''
             strl = ''
             while i <= 18:
-                lethality = 0.4 * float(argv[2]) + ((0.6 * float(argv[2]) * i)/18)
+                #lethality = 0.6 * float(argv[2]) + ((0.6 * float(argv[2]) * i)/18)
+                lethality = float(argv[2]) * (0.6 + (0.4 * i)/18)
                 stri += str(i) + '\n'
                 strl += str(lethality) + '\n'
                 i += 1
@@ -325,7 +331,7 @@ async def on_message(message):
             return -1
 
         # Wonder if Riot will ever change the formula
-        lethality = 0.4 * float(argv[1]) + ((0.6 * float(argv[1]) * float(argv[2]))/18)
+        lethality = float(argv[1]) * (0.6 + (0.4 * float(argv[2]))/18)
         embed = discord.Embed(color=0xCC00CC)
         embed.add_field(name="Effective Armor Pen", value="__" + str(lethality) + "__")
         await client.send_message(message.channel, embed=embed)
