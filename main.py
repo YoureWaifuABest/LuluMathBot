@@ -293,7 +293,6 @@ async def on_message(message):
             stri = ''
             strl = ''
             while i <= 18:
-                #lethality = 0.6 * float(argv[2]) + ((0.6 * float(argv[2]) * i)/18)
                 lethality = float(argv[2]) * (0.6 + (0.4 * i)/18)
                 stri += str(i) + '\n'
                 strl += str(lethality) + '\n'
