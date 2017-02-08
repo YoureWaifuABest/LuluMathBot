@@ -35,7 +35,7 @@ async def on_message(message):
         embed = discord.Embed(color=0xCC00CC, title="????")
         embed.set_image(url="http://i0.kym-cdn.com/entries/icons/facebook/000/018/489/nick-young-confused-face-300x256_nqlyaa.jpg")
         await client.send_message(message.channel, embed=embed)
- #       await client.send_message(message.channel, 'http://i0.kym-cdn.com/entries/icons/facebook/000/018/489/nick-young-confused-face-300x256_nqlyaa.jpg')
+
     if message.content.lower().startswith('that tasted'):
         await client.send_message(message.channel, 'purple!')
 
