@@ -17,8 +17,7 @@ These are the general things I plan to add.
 		- [x] Ex: `!item hextech` returns the names: hextech gunblade, glp, protobelt, etc.
 		- [x] If there is only one possible value, return that value.
 - [ ] Use some sort of databse instead of just writing to files
-	- [ ] Research into various DBs
-	- [ ] Find Python bindings
+	- [ ] Probably use REDIS
 
 ## Mid Priority
 - [ ] Add more features
