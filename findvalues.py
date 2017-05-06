@@ -23,14 +23,14 @@ def findchampid(champ):
     champ = champ.capitalize()
 
     if not os.path.exists('data/championID'):
-        r = requests.get('https://global.api.pvp.net/api/lol/static-data/na/v1.2/champion', params=param)
+        r = requests.get('https://na1.api.riotgames.com/lol/static-data/v3/champions', params=param)
         if r.status_code != 200:
             return -1
         f = open('data/championID', 'w')
         f.write(r.text)
         f.close()
     elif time.time() - os.path.getmtime('data/championID') > 3600:
-        r = requests.get('https://global.api.pvp.net/api/lol/static-data/na/v1.2/champion', params=param)
+        r = requests.get('https://na1.api.riotgames.com/lol/static-data/v3/champions', params=param)
         if r.status_code != 200:
             return -1
         f = open('data/championID', 'w')
@@ -50,14 +50,14 @@ def findchamp(champ, cid, find):
     param['champData'] = find
 
     if not os.path.exists('data/' + champ + find):
-        r = requests.get('https://global.api.pvp.net/api/lol/static-data/na/v1.2/champion/' + cid, params=param)
+        r = requests.get('https://na1.api.riotgames.com/lol/static-data/v3/champions/' + cid, params=param)
         if r.status_code != 200:
             return -1
         f = open('data/' + champ + find, 'w')
         f.write(r.text)
         f.close()
     elif time.time() - os.path.getmtime('data/' + champ + find) > 7200:
-        r = requests.get('https://global.api.pvp.net/api/lol/static-data/na/v1.2/champion/' + cid, params=param)
+        r = requests.get('https://na1.api.riotgames.com/lol/static-data/v3/champions/' + cid, params=param)
         if r.status_code != 200:
             return -1
         f = open('data/' + champ + find, 'w')
@@ -75,14 +75,14 @@ def finditem(item):
     
     param['itemData'] = 'all'
     if not os.path.exists('data/' + str(item)):
-        r = requests.get('https://global.api.pvp.net/api/lol/static-data/na/v1.2/item/' + str(item), params=param)
+        r = requests.get('https://na1.api.riotgames.com/lol/static-data/v3/items/' + str(item), params=param)
         if r.status_code != 200:
             return -1
         f = open('data/' + str(item), 'w')
         f.write(r.text)
         f.close()
     elif time.time() - os.path.getmtime('data/' + str(item)) > 7200:
-        r = requests.get('https://global.api.pvp.net/api/lol/static-data/na/v1.2/item/' + str(item), params=param)
+        r = requests.get('https://na1.api.riotgames.com/lol/static-data/v3/items/' + str(item), params=param)
         if r.status_code != 200:
             return -1
         f = open('data/' + str(item), 'w')
@@ -100,14 +100,14 @@ def finditemval(item):
     global param
 
     if not os.path.exists('data/items'):
-        r = requests.get('https://global.api.pvp.net/api/lol/static-data/na/v1.2/item', params=param)
+        r = requests.get('https://na1.api.riotgames.com/lol/static-data/v3/items/', params=param)
         if r.status_code != 200:
             return -1
         f = open('data/items', 'w')
         f.write(r.text)
         f.close()
     elif time.time() - os.path.getmtime('data/' + str(item)) > 115200:
-        r = requests.get('https://global.api.pvp.net/api/lol/static-data/na/v1.2/item', params=param)
+        r = requests.get('https://na1.api.riotgames.com/lol/static-data/v3/items/', params=param)
         if r.status_code != 200:
             return -1
         f = open('data/items', 'w')
@@ -127,17 +127,16 @@ def finditemval(item):
 
 def challenger():
     global param
-    param['type'] = 'RANKED_SOLO_5x5'
 
     if not os.path.exists('data/currentchallenger'):
-        r = requests.get('https://na.api.pvp.net/api/lol/na/v2.5/league/challenger', params=param)
+        r = requests.get('https://na1.api.riotgames.com/lol/league/v3/challengerleagues/by-queue/RANKED_SOLO_5x5', params=param)
         if r.status_code != 200:
             return -1
         f = open('data/currentchallenger', 'w') 
         f.write(r.text)
         f.close()
     elif time.time() - os.path.getmtime('data/currentchallenger') > 1800:
-        r = requests.get('https://na.api.pvp.net/api/lol/na/v2.5/league/challenger', params=param)
+        r = requests.get('https://na1.api.riotgames.com/lol/league/v3/challengerleagues/by-queue/RANKED_SOLO_5x5', params=param)
         if r.status_code != 200:
             return -1
         f = open('data/currentchallenger', 'w')
@@ -156,7 +155,7 @@ def challenger():
 def findid(player):
     global param
 
-    r = requests.get('https://na.api.pvp.net/api/lol/na/v1.4/summoner/by-name/' + player, params=param)
+    r = requests.get('https://na1.api.riotgames.com/lol/summoner/v3/summoners/by-name/' + player, params=param)
 
     if r.status_code != 200:
         return -1
