@@ -9,7 +9,7 @@ These are the general things I plan to add.
 - [ ] Add more Riot API Features
 	- [x] Replace current ddragon input with static API
 	- [ ] Specific profile lookup other than just winrate (partially done)
-	- [ ] Use API v3
+	- [x] Use API v3
 - [ ] Rewrite formatting.py
 - [x] Improve !item search
 	- [x] Improve parsing of colloq
