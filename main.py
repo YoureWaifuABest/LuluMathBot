@@ -9,7 +9,7 @@ from random import randint
 from formatting import skinstrim, itemstrim, statstrim, rankedtrim
 from getargs   import getargs
 from getdigits import getdigits
-from findvalues import findchamp, finditem, challenger, findid, findwinrate, findrank, findchampid, findchampstats
+from findvalues import findchamp, finditem, challenger, findchampid
 from itemdict import itemstovalues, valuestoitems, colloq
 
 client = discord.Client()
