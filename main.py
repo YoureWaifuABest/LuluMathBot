@@ -6,7 +6,7 @@ import datetime
 import os
 import time
 from random import randint
-from formatting import skinstrim, itemstrim, statstrim, rankedtrim
+from formatting import skinstrim, itemstrim, statstrim
 from getargs   import getargs
 from getdigits import getdigits
 from findvalues import findchamp, finditem, challenger, findchampid
@@ -47,9 +47,6 @@ async def on_message(message):
     # Would be incredibly annoying.
     # But a message this specific won't ever happen unless someone reads the code or I tell them about it.
     # Optimal inbetween would be for this to happen sometimes accidentally, but not very often.
-    #
-    # Unrelated, considering switching to another language because python's multiline comment is 
-    # absolutely disgusting (or rather python's lack thereof)
     if message.content.lower().startswith('hello!!!'):
         await client.send_message(message.channel, 'Pleased to meet you!')
 
@@ -112,23 +109,12 @@ async def on_message(message):
             await client.send_message(message.channel, 'Definitely not.')
 
     #### Administrative Stuff ####
-    
-    # There's no real reason to leave this in
-    if message.content.startswith('!test'):
-        counter = 0
-        tmp = await client.send_message(message.channel, 'Calculating messages...')
-        async for log in client.logs_from(message.channel, limit=100):
-            if log.author == message.author:
-                counter += 1
-
-        await client.edit_message(tmp, 'You have {} messages.'.format(counter))
-
     if message.content.startswith('!help'):
         embed = discord.Embed(color=0xCC00CC, title="Commands")
         embed.add_field(name="General", value="`!help !source !license`")
         embed.add_field(name="Calculations", value="`!reduction !lethality !damage`")
         embed.add_field(name="Static Data", value="`!champ !item`")
-        embed.add_field(name="Summoner Data", value="`!winrate !challenger !rank`")
+        embed.add_field(name="Summoner Data", value="`!challenger`")
         embed.set_footer(text="Add help as an argument to any command to get help with it.")
         await client.send_message(message.channel, embed=embed)
 
@@ -606,120 +592,6 @@ async def on_message(message):
         embed.set_footer(text="Data retreived on: " + time.strftime("%d-%m-%Y %H:%M:%S", time.localtime(os.path.getmtime('data/currentchallenger'))) + " MST")
 
         await client.send_message(message.channel, embed=embed)
-
-    # This function was mostly used to test the Riot API
-    # I'll replace it fully with !rank pretty soon
-    if message.content.lower().startswith("!winrate"):
-        argc, argv = getargs(message.content)
-
-        try:
-            argv[1]
-        except IndexError:
-            embed = discord.Embed(color=0xFF0022, title="ERROR", description="Too few arguments")
-            embed.add_field(name="Usage", value="`!winrate player`")
-            await client.send_message(message.channel, embed=embed)
-            return -1
-
-        # Not sure what to do if the player's name is help.
-        if argv[1] == 'help':
-            embed = discord.Embed(color=0xCC00CC, title='Help', description='Prints the winrate of a player')
-            embed.add_field(name="Usage", value="`!winrate player`", inline=False)
-            await client.send_message(message.channel, embed=embed)
-            return 0
-
-        if not re.match("^[0-9\\{a-zA-z} _\\.]+$", argv[1]):
-            embed = discord.Embed(color=0xFF0022, title="ERROR", description="Character not allowed in League of Legends name.")
-            embed.add_field(name="Possible Values", value="`Numbers 0-9, letters a-z (capitalized or uncapitalized), underscores, and periods.`")
-            await client.send_message(message.channel, embed=embed)
-            return -1
-
-        playerid = findid(argv[1])
-        if playerid == -1:
-            embed = discord.Embed(color=0xFF0022, title="ERROR", description="Summoner does not exist!")
-            await client.send_message(message.channel, embed=embed)
-            return -1
-
-        if findwinrate(playerid) == -1:
-            embed = discord.Embed(color=0x1100CC, title="ERROR", description="User has no ranked games played!")
-            await client.send_message(message.channel, embed=embed)
-            return -1
-
-
-        embed = discord.Embed(color=0xCC00CC, title="Winrate in Ranked", description=str(findwinrate(playerid)))
-        embed.set_footer(text="Data retreived on: " + datetime.datetime.now().strftime("%d-%m-%Y %H:%M:%S") + " MST")
-        await client.send_message(message.channel, embed=embed)
-
-    if message.content.lower().startswith("!rank"):
-        argc, argv = getargs(message.content)
-
-        try: 
-            argv[1]
-        except IndexError:
-            embed = discord.Embed(color=0xFF0022, title="ERROR", description="Too few arguments")
-            embed.add_field(name="Usage", value="`!rank player`")
-            await client.send_message(message.channel, embed=embed)
-            return -1
-        
-        # Same issue. What if name is help?
-        # There is a summoner with that name. Is it fine for him to be impossible to look up?
-        if argv[1] == 'help':
-            embed = discord.Embed(color=0xCC00CC, title='Help', description='Prints ranked stats of a player')
-            embed.add_field(name="Usage", value="`!rank player [options]`", inline=False)
-            embed.add_field(name="Options", value="champ (prints data on a certain champ). Leave blank to print player's ranked stats.")
-            await client.send_message(message.channel, embed=embed)
-            return 0
-
-        if not re.match("^[0-9\\{a-zA-z} _\\.]+$", argv[1]):
-            embed = discord.Embed(color=0xFF0022, title="ERROR", description="Character not allowed in League of Legends name.")
-            embed.add_field(name="Possible Values", value="`Numbers 0-9, letters a-z (capitalized or uncapitalized), underscores, and periods.`")
-            await client.send_message(message.channel, embed=embed)
-            return -1
-
-        playerid = findid(argv[1])
-        if playerid == -1:
-            embed = discord.Embed(color=0xFF0022, title="ERROR", description="Summoner does not exist!")
-            await client.send_message(message.channel, embed=embed)
-            return -1
-
-        if findrank(playerid) == -1:
-            embed = discord.Embed(color=0x1100CC, title="ERROR", description="User has no ranked games played!")
-            await client.send_message(message.channel, embed=embed)
-            return -1
-
-        try:
-            argv[2]
-        except IndexError:
-            argv.append('default')
-
-        if argv[2] == 'default':
-            embed = rankedtrim(findrank(str(playerid)))
-            embed.set_footer(text="Data retreived on: " + datetime.datetime.now().strftime("%d-%m-%Y %H:%M:%S") + " MST")
-            await client.send_message(message.channel, embed=embed)
-            return 0
-        elif argv[2] == 'champ':
-            try:
-                argv[3]
-            except IndexError:
-                embed = discord.Embed(color=0xFF0022, title="ERROR", description="Too few arguments")
-                embed.add_field(name="Usage", value="`!rank player champ champion`")
-                await client.send_message(message.channel, embed=embed)
-                return -1
-
-            cid = findchampid(argv[3])
-            if cid == -1:
-                embed = discord.Embed(color=0xFF0022, title="ERROR", description="Champion does not exist!")
-                embed.add_field(name="Usage", value="`!rank player champ champion")
-                await client.send_message(message.channel, embed=embed)
-                return -1
-
-            stats = findchampstats(cid, playerid)
-            stats = stats['stats']
-
-            embed = discord.Embed(color=0xCC00CC, title=argv[3].capitalize() + " Stats")
-            embed.add_field(name="KDA", value=(stats['totalChampionKills'] + stats['totalAssists']) / stats['totalDeathsPerSession'])
-            embed.add_field(name="Winrate", value=str((stats['totalSessionsWon'] / stats['totalSessionsPlayed']) * 100) + "%")
-            await client.send_message(message.channel, embed=embed) 
-            return 0
 
 from bottoken import token
 client.run(token)

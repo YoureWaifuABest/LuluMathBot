@@ -120,37 +120,3 @@ def itemstrim(trim):
         embed.add_field(name="Description", value=item['desc'], inline=False)
 
     return embed
-
-def rankedtrim(trim):
-    if trim == -1:
-        embed = discord.Embed(color=0x1100CC, title="ERROR", description="Summoner has no ranked games played!")
-    else: 
-        embed = discord.Embed(color=0xCC00CC, title=trim['entries'][0]['playerOrTeamName'], description=trim['name'])
-        embed.add_field(name="Rank", value=trim['tier'] + ' ' + trim['entries'][0]['division'])
-        embed.add_field(name="LP", value=trim['entries'][0]['leaguePoints'])
-        embed.add_field(name="Win/Loss", value=str(trim['entries'][0]['wins']) + '/' + str(trim['entries'][0]['losses']))
-
-        try:
-            trim['entries'][0]['miniSeries']
-            mseries = True
-        except KeyError:
-            mseries = False
-        
-        if mseries:
-            embed.add_field(name="Series", value="Wins needed: " + str(trim['entries'][0]['miniSeries']['target']) + '\n' + \
-                                                 "Current Win / Loss: " + str(trim['entries'][0]['miniSeries']['wins']) + '/' + \
-                                                 str(trim['entries'][0]['miniSeries']['losses']), inline=False)
-
-        string = ''
-        if trim['entries'][0]['isVeteran'] == True:
-            string += "Veteran | "
-        if trim['entries'][0]['isFreshBlood'] == True:
-            string += "Fresh Blood | "
-        if trim['entries'][0]['isHotStreak'] == True:
-            string += "Hot Streak "
-
-        # shouldn't need to make this check. clean up
-        if trim['entries'][0]['isVeteran'] == True or trim['entries'][0]['isFreshBlood'] == True or trim['entries'][0]['isHotStreak'] == True:
-            embed.add_field(name="Emblems:", value=string)
-
-    return embed
