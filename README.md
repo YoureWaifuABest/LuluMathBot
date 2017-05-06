@@ -19,6 +19,7 @@ Discord bot to do basic League of Legends related math and output League of Lege
 ## Dependencies
 1. Python3.5+
 2. discord.py
+3. requests
 
 ## Installation
 1. `git clone [this repo]`
