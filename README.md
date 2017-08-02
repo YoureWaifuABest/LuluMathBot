@@ -1,6 +1,8 @@
 # LuluMathBot
 Discord bot to do basic League of Legends related math and output League of Legends related stats. 
 
+## No longer maintained; rewrote in Go and moved to https://github.com/YoureWaifuABest/Go-LuluMathBot
+
 ## Current features:
 1. Lethality, armor, and magic resistance calculations
 2. Basic damage calculator (damage * resist essentially)
