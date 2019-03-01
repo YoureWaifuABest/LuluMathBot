@@ -119,7 +119,7 @@ async def on_message(message):
         await client.send_message(message.channel, embed=embed)
 
     if message.content.startswith('!source'):
-        await client.send_message(message.channel, 'Github: https://github.com/YoureWaifuABest/LuluMathBot')
+        await client.send_message(message.channel, 'Github: https://github.com/kuwuda/Go-LuluMathBot')
 
     if message.content.startswith('!license'):
         embed = discord.Embed(color=0xCC00CC, title="License", description=open('LICENSE', 'r').read())
